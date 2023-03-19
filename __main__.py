@@ -121,16 +121,18 @@ async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_c
             # # We expect a json object, which we unpack here
             # response = json.loads(response)
 
+            response_text = response.choices[0].text.strip().replace("\n", "")
+
             # print the question in color
             print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
             # Print the response in color
             # print(f"\b{RED}[{configs['gpt_name']}] {response['response']}{RESET}\n")
-            print(f"\b{RED}[{configs['gpt_name']}] {response.choices[0].text.strip()}{RESET}\n")
+            print(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
 
             if log_responses:
                 with open (configs['output_file'], 'a') as f:
-                    f.write(f"{question},{response.choices[0].text.strip()}")
+                    f.write(f"{question},{response_text}")
 
 # Define color codes
 CYAN = "\033[1;36m"

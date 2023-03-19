@@ -1,7 +1,7 @@
 import time
 import asyncio
 import aiohttp
-
+import json
 
 # Define color codes
 CYAN = "\033[1;36m"
@@ -14,6 +14,21 @@ async def make_request(session, url, message):
         return await response.text()
 
 
+title = """  
+   _____ _____ _______ _________     __
+  / ____|  __ \__   __|__   __\ \   / /
+ | |  __| |__) | | |     | |   \ \_/ / 
+ | | |_ |  ___/  | |     | |    \   /  
+ | |__| | |      | |     | |     | |   
+  \_____|_|      |_|     |_|     |_|   
+                                     
+Welcome to GPTTY, a ChatGPT wrapper for your CLI
+Written by Sig Janoska-Bedi <https://github.com/signebedi/gptty>
+
+"""
+
+# Print the text in cyan
+print(f"{CYAN}{title}{RESET}")
 
 
 async def main(url="http://0.0.0.0:8080"):
@@ -26,8 +41,8 @@ async def main(url="http://0.0.0.0:8080"):
             message = input(f"{CYAN}> {RESET}")
 
             # Show a graphic while waiting for a response
-            print(f"{CYAN}[question] {message}{RESET} ", end="", flush=True)
-            for i in range(10):
+            print(f"{CYAN}[question] {message}{RESET} \n", end="", flush=True)
+            for i in range(3):
                 print("." * i + " " * (9 - i), end="", flush=True)
                 time.sleep(0.1)
                 print("\b" * 10, end="", flush=True)
@@ -35,8 +50,11 @@ async def main(url="http://0.0.0.0:8080"):
             # Send a message to the API
             response = await make_request(session, url, message)
 
+            # We expect a json object, which we unpack here
+            response = json.loads(response)
+
             # Print the response in color
-            print(f"\b{RED}[response] {response}{RESET}")
+            print(f"\b{RED}[response] {response['response']}{RESET}\n")
 
 # Run the main coroutine
 asyncio.run(main())

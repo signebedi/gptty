@@ -38,7 +38,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         response_json = json.dumps(response)
 
         # Wait a random amount of time between 1 and 10 seconds
-        time.sleep(random.uniform(1, 10))
+        # time.sleep(random.uniform(1, 10))
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')

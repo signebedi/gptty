@@ -24,15 +24,24 @@ def parse_config_data(config_file='gptty.ini'):
     # create a configuration object
     config = configparser.ConfigParser()
 
+    config['DEFAULT'] = {
+        'api_key': "",
+        'gpt_version': '3',
+        'your_name': 'question',
+        'gpt_name': 'response',
+        'output_file': 'output.txt'
+    }
+
+
     # read the configuration file (if it exists)
     config.read(config_file)
 
     parsed_data = {
-        'api_key': config.get('main', 'api_key', fallback= "",),
-        'gpt_version': config.get('main', 'gpt_version', fallback= '3'),
-        'your_name': config.get('main', 'your_name', fallback= 'question'),
-        'gpt_name': config.get('main', 'gpt_name', fallback= 'response'),
-        'output_file': config.get('main', 'output_file', fallback= 'output.txt'),
+        'api_key': config.get('main', 'api_key', fallback="",),
+        'gpt_version': config.get('main', 'gpt_version', fallback='3'),
+        'your_name': config.get('main', 'your_name', fallback='question'),
+        'gpt_name': config.get('main', 'gpt_name', fallback='response'),
+        'output_file': config.get('main', 'output_file', fallback='output.txt'),
     }
 
     option1 = config.get('section1', 'option1', fallback='value1')
@@ -61,7 +70,7 @@ async def query_api(session, url, message: str) -> Optional[str]:
 
 
 
-async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_config_data()):
+async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_config_data(), log_responses=True):
 
     # Authenticate with OpenAI using your API key
     # print (configs['api_key'])
@@ -119,7 +128,9 @@ async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_c
             # print(f"\b{RED}[{configs['gpt_name']}] {response['response']}{RESET}\n")
             print(f"\b{RED}[{configs['gpt_name']}] {response.choices[0].text.strip()}{RESET}\n")
 
-
+            if log_responses:
+                with open (configs['output_file'], 'a') as f:
+                    f.write(f"{question},{response.choices[0].text.strip()}")
 
 # Define color codes
 CYAN = "\033[1;36m"
@@ -127,7 +138,7 @@ RED = "\033[1;31m"
 RESET = "\033[0m"
 
 
-title = f"""  
+title = r"""  
    _____ _____ _______ _________     __
   / ____|  __ \__   __|__   __\ \   / /
  | |  __| |__) | | |     | |   \ \_/ / 
@@ -135,12 +146,10 @@ title = f"""
  | |__| | |      | |     | |     | |   
   \_____|_|      |_|     |_|     |_|   
                                      
-Welcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.
-Written by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.
 """
 
 # Print the text in cyan
-print(f"{CYAN}{title}{RESET}")
+print(f"{CYAN}{title}\nWelcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}")
 
 
 # Run the main coroutine

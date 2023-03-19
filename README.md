@@ -1,2 +1,2 @@
 # gptty
-Chat GPT warpper in your TTY
+Chat GPT wrapper in your TTY

@@ -1,10 +1,7 @@
-import time
-import asyncio
-import aiohttp
-import json
-from typing import Optional
+"""
+gptty: chat GPT CLI wrapper
 
-
+"""
 
 __name__ = "gptty"
 __author__ = "Sig Janoska-Bedi"
@@ -14,26 +11,34 @@ __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
-# Define color codes
-CYAN = "\033[1;36m"
-RED = "\033[1;31m"
-RESET = "\033[0m"
+import openai
+import time
+import asyncio
+import aiohttp
+import json
+from typing import Optional
+import configparser
 
+# parse config data
+def parse_config_data(config_file='gptty.ini'):
+    # create a configuration object
+    config = configparser.ConfigParser()
 
-title = f"""  
-   _____ _____ _______ _________     __
-  / ____|  __ \__   __|__   __\ \   / /
- | |  __| |__) | | |     | |   \ \_/ / 
- | | |_ |  ___/  | |     | |    \   /  
- | |__| | |      | |     | |     | |   
-  \_____|_|      |_|     |_|     |_|   
-                                     
-Welcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.
-Written by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.
-"""
+    # read the configuration file (if it exists)
+    config.read(config_file)
 
-# Print the text in cyan
-print(f"{CYAN}{title}{RESET}")
+    parsed_data = {
+        'api_key': config.get('main', 'api_key', fallback= "",),
+        'gpt_version': config.get('main', 'gpt_version', fallback= '3'),
+        'your_name': config.get('main', 'your_name', fallback= 'question'),
+        'gpt_name': config.get('main', 'gpt_name', fallback= 'response'),
+        'output_file': config.get('main', 'output_file', fallback= 'output.txt'),
+    }
+
+    option1 = config.get('section1', 'option1', fallback='value1')
+    option2 = config.get('section1', 'option2', fallback='value2')
+
+    return parsed_data
 
 
 # Define async API call function
@@ -56,7 +61,16 @@ async def query_api(session, url, message: str) -> Optional[str]:
 
 
 
-async def create_chat_room(url="http://0.0.0.0:8080"):
+async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_config_data()):
+
+    # Authenticate with OpenAI using your API key
+    # print (configs['api_key'])
+    openai.api_key = configs['api_key'].rstrip('\n')
+
+    # Set the parameters for the OpenAI completion API
+    model_engine = "davinci" # the most capable GPT-3 model
+    temperature = 0.5 # controls the creativity of the response
+    max_tokens = 1024 # the maximum length of the generated response
 
     # Create a session object
     async with aiohttp.ClientSession() as session:
@@ -64,6 +78,11 @@ async def create_chat_room(url="http://0.0.0.0:8080"):
         while True:
             # Get user input
             question = input(f"{CYAN}> ")
+            prompt_length = len(question)
+
+            if prompt_length < 1:
+                print('Please provide an actual prompt.\n')
+                continue
 
             # Query the API asynchronously
             response = None
@@ -75,17 +94,54 @@ async def create_chat_room(url="http://0.0.0.0:8080"):
                     time.sleep(0.1)
                     print("\b" * 10, end="", flush=True)
 
-                # Query the API
-                response = await query_api(session, url, question)
 
-            # We expect a json object, which we unpack here
-            response = json.loads(response)
+                response = openai.Completion.create(
+                    engine=model_engine,
+                    prompt=question,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    n=1,
+                    stop=None,
+                    timeout=15,
+                )
+
+
+            #     # Query the API
+            #     response = await query_api(session, url, question)
+
+            # # We expect a json object, which we unpack here
+            # response = json.loads(response)
 
             # print the question in color
-            print(f"{CYAN}[question] {question}{RESET} \n", end="", flush=True)
+            print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
             # Print the response in color
-            print(f"\b{RED}[response] {response['response']}{RESET}\n")
+            # print(f"\b{RED}[{configs['gpt_name']}] {response['response']}{RESET}\n")
+            print(f"\b{RED}[{configs['gpt_name']}] {response.choices[0].text.strip()}{RESET}\n")
+
+
+
+# Define color codes
+CYAN = "\033[1;36m"
+RED = "\033[1;31m"
+RESET = "\033[0m"
+
+
+title = f"""  
+   _____ _____ _______ _________     __
+  / ____|  __ \__   __|__   __\ \   / /
+ | |  __| |__) | | |     | |   \ \_/ / 
+ | | |_ |  ___/  | |     | |    \   /  
+ | |__| | |      | |     | |     | |   
+  \_____|_|      |_|     |_|     |_|   
+                                     
+Welcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.
+Written by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.
+"""
+
+# Print the text in cyan
+print(f"{CYAN}{title}{RESET}")
+
 
 # Run the main coroutine
 asyncio.run(create_chat_room())

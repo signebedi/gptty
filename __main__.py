@@ -31,9 +31,19 @@ title = r"""
   \_____|_|      |_|     |_|     |_|   
                                      
 """
+title = r"""
+               _   _         
+   ____ _____ | | | |        
+  / __ `/ __ \| |_| |_ _   _ 
+ / /_/ / /_/ /| __| __| | | |
+ \__, / .___/ | |_| |_| |_| |
+/____/_/       \__|\__|\__, |
+                        __/ |
+                       |___/ 
+"""
 
 # Print the text in cyan
-print(f"{CYAN}{title}\nWelcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}\n")
+print(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}\n")
 
 # load the app configs
 configs = get_config_data()

@@ -36,3 +36,7 @@ Tagging text for context when writing a query on this app can help improve the a
 Make sure to use the same tag consistently for all related queries.
 4. The application will save your tagged question and response in the output file specified in the code output file.
 5. When asking subsequent questions on the same topic, provide the tag in your input message in order to retrieve the relevant context for the generated response.
+
+Here is an example of what this might look like, using questions tagged as `[shakespeare]`. Notice how, in the second question, the name 'William Shakespeare' is not mentioned at all.
+
+![context example](assets/context_example.png)

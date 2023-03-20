@@ -33,7 +33,7 @@ title = r"""
 """
 
 # Print the text in cyan
-print(f"{CYAN}{title}\nWelcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}")
+print(f"{CYAN}{title}\nWelcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}\n")
 
 # load the app configs
 configs = get_config_data()

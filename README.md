@@ -25,7 +25,7 @@ If you experience an error, try [configuring](#configuration) the app.
 
 `gptty` reads configuration settings from a file named gptty.ini located in the same directory as the main script. The file uses the INI file format, which consists of sections, each with its own key-value pairs.
 
-| Month    | Savings | Month    | Savings |
+| Key    | Type | Default Value    | Description |
 | -------- | ------- | -------- | ------- |
 | api_key  | String    | ""  |   The API key for OpenAI's GPT service  |
 | gpt_version | String     | "3" |    The version of GPT to use  |

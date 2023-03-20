@@ -20,6 +20,11 @@ from typing import Optional
 import configparser
 from datetime import datetime
 
+
+def get_context(tag, max_context_length):
+
+    pass
+
 # parse config data
 def parse_config_data(config_file='gptty.ini'):
     # create a configuration object
@@ -55,27 +60,7 @@ def parse_config_data(config_file='gptty.ini'):
     return parsed_data
 
 
-# Define async API call function
-async def make_request(session, url, message):
-    async with session.post(url, data=message) as response:
-        return await response.text()
-
-
-# Define a more robust function to query the API
-async def query_api(session, url, message: str) -> Optional[str]:
-    # Make the HTTP request
-    async with session.post(url, data={"message": message}) as response:
-        # Check the status code
-        if response.status == 200:
-            # Return the response text
-            return await response.text()
-        else:
-            # Return None if there was an error
-            return None
-
-
-
-async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_config_data(), log_responses=True):
+async def create_chat_room(configs=parse_config_data(), log_responses=True):
 
     # Authenticate with OpenAI using your API key
     # print (configs['api_key'])
@@ -119,31 +104,23 @@ async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_c
                     timeout=15,
                 )
 
-
-            #     # Query the API
-            #     response = await query_api(session, url, question)
-
-            # # We expect a json object, which we unpack here
-            # response = json.loads(response)
-
             response_text = response.choices[0].text.strip().replace("\n", "")
 
             # print the question in color
             print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
             # Print the response in color
-            # print(f"\b{RED}[{configs['gpt_name']}] {response['response']}{RESET}\n")
             print(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
 
             if log_responses:
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 with open (configs['output_file'], 'a') as f:
-                    f.write(f"{question},{response_text}")
+                    f.write(f"{timestamp}|{question.replace('|','')}|{response_text.replace('|','')}")
 
 # Define color codes
 CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
-
 
 title = r"""  
    _____ _____ _______ _________     __
@@ -158,8 +135,13 @@ title = r"""
 # Print the text in cyan
 print(f"{CYAN}{title}\nWelcome to GPTTY (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}")
 
+# load the app configs
+configs = parse_config_data()
+
+# create the output file if it doesn't exist
+with open (configs['output_file'], 'a'): pass
 
 # Run the main coroutine
-asyncio.run(create_chat_room())
+asyncio.run(create_chat_room(configs=configs))
 
 

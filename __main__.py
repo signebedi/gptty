@@ -25,6 +25,9 @@ def get_context(tag, max_context_length):
 
     pass
 
+def get_tag_from_text(user_input):
+    pass
+
 # parse config data
 def parse_config_data(config_file='gptty.ini'):
     # create a configuration object

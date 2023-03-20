@@ -26,4 +26,13 @@ You can modify the settings in the configuration file to suit your needs. If a k
 api_key=my_api_key
 ```
 
+## Context
 
+Tagging text for context when writing a query on this app can help improve the accuracy of the generated response. Here are the steps to follow:
+
+1. Identify the context of your question or statement. 
+2. Assign a tag to that context. The tag can be a word or short phrase that describes the context like `bananas` or `shakespeare`..
+3. Include the tag in your input message by prefixing it with `[tag]`. For example, if the context of your question is "cooking," you can tag it as `[cooking]`.
+Make sure to use the same tag consistently for all related queries.
+4. The application will save your tagged question and response in the output file specified in the code output file.
+5. When asking subsequent questions on the same topic, provide the tag in your input message in order to retrieve the relevant context for the generated response.

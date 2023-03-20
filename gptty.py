@@ -27,7 +27,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True):
     # print (configs['api_key'])
     if configs['api_key'].rstrip('\n') == "":
         print(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
-        break
+        return
 
     openai.api_key = configs['api_key'].rstrip('\n')
 

@@ -18,6 +18,7 @@ import aiohttp
 import json
 from typing import Optional
 import configparser
+from datetime import datetime
 
 # parse config data
 def parse_config_data(config_file='gptty.ini'):
@@ -29,9 +30,12 @@ def parse_config_data(config_file='gptty.ini'):
         'gpt_version': '3',
         'your_name': 'question',
         'gpt_name': 'response',
-        'output_file': 'output.txt'
+        'output_file': 'output.txt',
+        'model': 'text-davinci-003',
+        'temperature': 0.0,
+        'max_tokens': 250,
+        'max_context_length': 5000,
     }
-
 
     # read the configuration file (if it exists)
     config.read(config_file)
@@ -42,10 +46,11 @@ def parse_config_data(config_file='gptty.ini'):
         'your_name': config.get('main', 'your_name', fallback='question'),
         'gpt_name': config.get('main', 'gpt_name', fallback='response'),
         'output_file': config.get('main', 'output_file', fallback='output.txt'),
+        'model': config.get('main', 'model', fallback='text-davinci-003'),
+        'temperature': config.getfloat('main', 'temperature', fallback=0.0),
+        'max_tokens': config.getint('main', 'max_tokens', fallback=25),
+        'max_context_length': config.getint('main', 'max_context_length', fallback=5000),
     }
-
-    option1 = config.get('section1', 'option1', fallback='value1')
-    option2 = config.get('section1', 'option2', fallback='value2')
 
     return parsed_data
 
@@ -77,9 +82,9 @@ async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_c
     openai.api_key = configs['api_key'].rstrip('\n')
 
     # Set the parameters for the OpenAI completion API
-    model_engine = "davinci" # the most capable GPT-3 model
-    temperature = 0.5 # controls the creativity of the response
-    max_tokens = 1024 # the maximum length of the generated response
+    model_engine = configs['model'].rstrip('\n')
+    temperature = configs['temperature'] # controls the creativity of the response
+    max_tokens = configs['max_tokens']  # the maximum length of the generated response
 
     # Create a session object
     async with aiohttp.ClientSession() as session:
@@ -90,7 +95,7 @@ async def create_chat_room(dev=False, url="http://0.0.0.0:8080", configs=parse_c
             prompt_length = len(question)
 
             if prompt_length < 1:
-                print('Please provide an actual prompt.\n')
+                print('\nPlease provide an actual prompt.\n')
                 continue
 
             # Query the API asynchronously

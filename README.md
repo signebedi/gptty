@@ -1,6 +1,25 @@
 # gptty
 Chat GPT wrapper in your TTY
 
+## Installation
+
+On linux, run:
+
+```
+cd ~/Code # replace this with whatever directory you want to use
+git clone https://github.com/signebedi/gptty.git
+
+# now install the requirements
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# now run it (make sure your venv is running)
+cd ~/Code # replace this with whatever directory you want to use
+python gptty
+```
+
+If you experience an error, try [configuring](#configuration) the app.
 
 ## Configuration
 

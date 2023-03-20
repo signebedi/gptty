@@ -7,6 +7,10 @@ __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
 def get_context(tag, max_context_length, output_file):
+
+    if len(tag) < 1:
+        return ""
+
     context = ""
     with open (output_file,'r') as f:
         text = f.readlines()

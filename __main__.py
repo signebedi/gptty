@@ -1,3 +1,4 @@
+
 """
 gptty: chat GPT CLI wrapper
 
@@ -43,7 +44,7 @@ title = r"""
 """
 
 # Print the text in cyan
-print(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper for your CLI.\nWritten by Sig Janoska-Bedi <signe@atreeus.com> under the {__license__} license.{RESET}\n")
+print(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper for your CLI.\nType \h in the chat interface if you need help getting started.{RESET}\n")
 
 # load the app configs
 configs = get_config_data()

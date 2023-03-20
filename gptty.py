@@ -48,6 +48,16 @@ async def create_chat_room(configs=get_config_data(), log_responses=True):
             if prompt_length < 1:
                 print('\nPlease provide an actual prompt.\n')
                 continue
+            elif i.strip() == '\h':
+                print('\nCommands:\n\h - see help\n\q - quit app\n\c - show configs\nTo send a question to ChatGPT, just type it into the chat interface like `why is the sky blue`.\nTo share context across conversations, prepend questions with tags like `[shakespeare] who is william shakespeare`.\n')
+                continue
+            elif i.strip() == '\q':
+                print ('\nGoodbye ... \n')
+                break
+            elif i.strip() == '\c':
+                c = f'{"|".join(f"{key}: {value}" for key, value in configs.items())}'.replace('|','\n')
+                print (f'\n{c}\n')
+                continue
 
             # Query the API asynchronously
             response = None

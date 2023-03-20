@@ -19,14 +19,9 @@ import json
 from typing import Optional
 import configparser
 from datetime import datetime
+from tagging import get_tag_from_text
+from context import get_context
 
-
-def get_context(tag, max_context_length):
-
-    pass
-
-def get_tag_from_text(user_input):
-    pass
 
 # parse config data
 def parse_config_data(config_file='gptty.ini'):
@@ -79,7 +74,8 @@ async def create_chat_room(configs=parse_config_data(), log_responses=True):
         # Continuously send and receive messages
         while True:
             # Get user input
-            question = input(f"{CYAN}> ")
+            i = input(f"{CYAN}> ")
+            tag,question = get_tag_from_text(i)
             prompt_length = len(question)
 
             if prompt_length < 1:
@@ -97,9 +93,11 @@ async def create_chat_room(configs=parse_config_data(), log_responses=True):
                     print("\b" * 10, end="", flush=True)
 
 
+                fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file']) + ' ' + question
+
                 response = openai.Completion.create(
                     engine=model_engine,
-                    prompt=question,
+                    prompt=fully_contextualized_question,
                     max_tokens=max_tokens,
                     temperature=temperature,
                     n=1,
@@ -118,7 +116,7 @@ async def create_chat_room(configs=parse_config_data(), log_responses=True):
             if log_responses:
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 with open (configs['output_file'], 'a') as f:
-                    f.write(f"{timestamp}|{question.replace('|','')}|{response_text.replace('|','')}")
+                    f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{response_text.replace('|','')}\n")
 
 # Define color codes
 CYAN = "\033[1;36m"

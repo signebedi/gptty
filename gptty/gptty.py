@@ -56,7 +56,7 @@ def create_chat_room(configs=get_config_data(), log_responses=True):
             click.echo('\nPlease provide an actual prompt.\n')
             continue
         elif i.strip() == ':help':
-            click.echo('\nCommands:\n:help - see help\n:quit - quit app\n:context[a:b] - show context history with optional index ranges a and b\n:configs - show configs\nTo send a question to ChatGPT, just type it into the chat interface like `why is the sky blue`.\nTo share context across conversations, prepend questions with tags like `[shakespeare] who is william shakespeare`.\n')
+            click.echo('\nCommands:\n:help - see help\n:quit - quit app\n:context[a:b] - show context history with optional index ranges a and b *under development*\n:configs - show configs\nTo send a question to ChatGPT, just type it into the chat interface like `why is the sky blue`.\nTo share context across conversations, prepend questions with tags like `[shakespeare] who is william shakespeare`.\nTo pass context positionally, prepend questions with tags like `[a:b] what is the meaning of life`.\n')
             continue
         elif i.strip() == ':quit':
             click.echo ('\nGoodbye ... \n')

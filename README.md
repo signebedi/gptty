@@ -48,6 +48,37 @@ You can modify the settings in the configuration file to suit your needs. If a k
 api_key=my_api_key
 ```
 
+## Usage
+
+Commands
+
+You can use the following metacommands
+
+| Metacommand    | Description    | 
+| -------- | ------- | 
+| :help | Display a list of available commands and their descriptions.   |
+| :quit | Exit ChatGPT.   |
+| :configs | Display the current configuration settings.   |
+| :context[a:b] | Display the context history, optionally specifying a range a and b. *Under development*   |
+
+To use a command, simply type it into the command prompt and press Enter. For example, use the following command to display the current configuration settings in the terminal:
+
+```
+> :configs
+
+api_key: SOME_CONFIG_HERE
+gpt_version: 3
+your_name: question
+gpt_name: response
+output_file: output.txt
+model: text-davinci-003
+temperature: 0.0
+max_tokens: 250
+max_context_length: 5000
+```
+
+You can type a question into the prompt anytime, and it will generate a reponse for you. If you'd like to share context across queries, see the [context](#context) section below.
+
 ## Context
 
 Tagging text for context when writing a query on this app can help improve the accuracy of the generated response. Here are the steps to follow:

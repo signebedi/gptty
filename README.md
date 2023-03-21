@@ -48,6 +48,8 @@ You can modify the settings in the configuration file to suit your needs. If a k
 api_key=my_api_key
 ```
 
+The application provides a sample configuration file `gptty.ini.example` that you can use as a starting point.
+
 ## Usage
 
 You can use the following metacommands from within the chat interface:

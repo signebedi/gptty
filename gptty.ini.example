@@ -1,0 +1,10 @@
+[main]
+api_key=SOME_KEY_HERE
+gpt_version=3
+your_name=question
+gpt_name=response
+output_file=output.txt
+model=text-davinci-003
+temperature=0.0
+max_tokens=250
+max_context_length=5000

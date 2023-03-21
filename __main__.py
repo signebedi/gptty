@@ -1,6 +1,6 @@
 
 """
-gptty: chat GPT CLI wrapper
+gptty: context-preserving chatGPT CLI wrapper
 
 """
 
@@ -12,7 +12,6 @@ __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
-import asyncio
 
 # app specific requirements
 from config import get_config_data
@@ -23,15 +22,6 @@ CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 
-title = r"""  
-   _____ _____ _______ _________     __
-  / ____|  __ \__   __|__   __\ \   / /
- | |  __| |__) | | |     | |   \ \_/ / 
- | | |_ |  ___/  | |     | |    \   /  
- | |__| | |      | |     | |     | |   
-  \_____|_|      |_|     |_|     |_|   
-                                     
-"""
 title = r"""
                _   _         
    ____ _____ | | | |        
@@ -52,7 +42,7 @@ configs = get_config_data()
 # create the output file if it doesn't exist
 with open (configs['output_file'], 'a'): pass
 
-# Run the main coroutine
-asyncio.run(create_chat_room(configs=configs))
+# Run the main function
+create_chat_room(configs=configs)
 
 

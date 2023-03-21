@@ -50,9 +50,7 @@ api_key=my_api_key
 
 ## Usage
 
-Commands
-
-You can use the following metacommands
+You can use the following metacommands from within the chat interface:
 
 | Metacommand    | Description    | 
 | -------- | ------- | 

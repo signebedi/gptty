@@ -131,3 +131,4 @@ dmypy.json
 # app-specific files
 gptty.ini
 output.txt
+exclude/*

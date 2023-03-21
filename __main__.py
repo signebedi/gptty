@@ -12,6 +12,8 @@ __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
+# general packages
+import click
 
 # app specific requirements
 from config import get_config_data
@@ -24,7 +26,7 @@ RESET = "\033[0m"
 
 title = r"""
                _   _         
-   ____ _____ | | | |        
+   ____  ____ | | | |        
   / __ `/ __ \| |_| |_ _   _ 
  / /_/ / /_/ /| __| __| | | |
  \__, / .___/ | |_| |_| |_| |
@@ -34,7 +36,7 @@ title = r"""
 """
 
 # Print the text in cyan
-print(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper for your CLI.\nType \h in the chat interface if you need help getting started.{RESET}\n")
+click.echo(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper for your CLI.\nType \h in the chat interface if you need help getting started.{RESET}\n")
 
 # load the app configs
 configs = get_config_data()

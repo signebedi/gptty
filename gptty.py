@@ -9,6 +9,7 @@ __email__ = "signe@atreeus.com"
 import openai
 import time
 from datetime import datetime
+import click
 
 # app specific requirements
 from tagging import get_tag_from_text
@@ -23,9 +24,9 @@ RESET = "\033[0m"
 def create_chat_room(configs=get_config_data(), log_responses=True):
 
     # Authenticate with OpenAI using your API key
-    # print (configs['api_key'])
+    # click.echo (configs['api_key'])
     if configs['api_key'].rstrip('\n') == "":
-        print(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
+        click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
         return
 
     openai.api_key = configs['api_key'].rstrip('\n')
@@ -43,17 +44,17 @@ def create_chat_room(configs=get_config_data(), log_responses=True):
         prompt_length = len(question)
 
         if prompt_length < 1:
-            print('\nPlease provide an actual prompt.\n')
+            click.echo('\nPlease provide an actual prompt.\n')
             continue
         elif i.strip() == '\h':
-            print('\nCommands:\n\h - see help\n\q - quit app\n\c - show configs\nTo send a question to ChatGPT, just type it into the chat interface like `why is the sky blue`.\nTo share context across conversations, prepend questions with tags like `[shakespeare] who is william shakespeare`.\n')
+            click.echo('\nCommands:\n\h - see help\n\q - quit app\n\c - show configs\nTo send a question to ChatGPT, just type it into the chat interface like `why is the sky blue`.\nTo share context across conversations, prepend questions with tags like `[shakespeare] who is william shakespeare`.\n')
             continue
         elif i.strip() == '\q':
-            print ('\nGoodbye ... \n')
+            click.echo ('\nGoodbye ... \n')
             break
         elif i.strip() == '\c':
             c = f'{"|".join(f"{key}: {value}" for key, value in configs.items())}'.replace('|','\n')
-            print (f'\n{c}\n')
+            click.echo (f'\n{c}\n')
             continue
 
         # Query the API asynchronously
@@ -81,11 +82,11 @@ def create_chat_room(configs=get_config_data(), log_responses=True):
 
             response_text = response.choices[0].text.strip().replace("\n", "")
 
-            # print the question in color
+            # click.echo the question in color
             print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
-            # Print the response in color
-            print(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
+            # click.echo the response in color
+            click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
 
             if log_responses:
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

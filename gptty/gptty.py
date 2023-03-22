@@ -22,6 +22,20 @@ CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 
+HELP = """
+                        [Commands]
+:h[elp]                                     -   see help
+:q[uit]                                     -   quit app
+:context                                    -   show context history
+:configs                                    -   show configs
+
+                        [Questions]
+`why is the sky blue`                       -   send a question to ChatGPT
+`[shakespeare] who is william shakespeare`  -   share context across conversations
+`[a:b] what is the meaning of life`         -   pass context positionally
+"""
+
+
 def create_chat_room(configs=get_config_data(), log_responses=True):
 
     # Authenticate with OpenAI using your API key
@@ -55,10 +69,10 @@ def create_chat_room(configs=get_config_data(), log_responses=True):
         if prompt_length < 1:
             click.echo('\nPlease provide an actual prompt.\n')
             continue
-        elif i.strip() == ':help':
-            click.echo('\nCommands:\n:help - see help\n:quit - quit app\n:context[a:b] - show context history with optional index ranges a and b *under development*\n:configs - show configs\nTo send a question to ChatGPT, just type it into the chat interface like `why is the sky blue`.\nTo share context across conversations, prepend questions with tags like `[shakespeare] who is william shakespeare`.\nTo pass context positionally, prepend questions with tags like `[a:b] what is the meaning of life`.\n')
+        elif i.strip() in [':help',':h']:
+            click.echo(HELP)
             continue
-        elif i.strip() == ':quit':
+        elif i.strip() in [':quit',':q']:
             click.echo ('\nGoodbye ... \n')
             break
         elif i.strip() == ':configs':

@@ -36,7 +36,7 @@ title = r"""
 """
 
 # Print the text in cyan
-click.echo(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper for your CLI.\nType :help in the chat interface if you need help getting started.{RESET}\n")
+click.echo(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper in your TTY.\nType :help in the chat interface if you need help getting started.{RESET}\n")
 
 # load the app configs
 configs = get_config_data()

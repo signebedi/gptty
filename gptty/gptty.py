@@ -13,9 +13,9 @@ import click
 import pandas as pd
 
 # app specific requirements
-from tagging import get_tag_from_text
-from context import get_context
-from config import get_config_data
+from gptty.tagging import get_tag_from_text
+from gptty.context import get_context
+from gptty.config import get_config_data
 
 # Define color codes
 CYAN = "\033[1;36m"

@@ -6,8 +6,14 @@ Chat GPT wrapper in your TTY
 
 ## Installation
 
+You can install `gptty` on pip:
 
-You can also install on :
+```
+pip install gptty
+```
+
+
+You can also install from git:
 
 ```
 cd ~/Code # replace this with whatever directory you want to use

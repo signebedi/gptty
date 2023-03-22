@@ -6,11 +6,13 @@ Chat GPT wrapper in your TTY
 
 ## Installation
 
-You can install `gptty` on pip:
+You can install `gptty` on pip
 
 ```
 pip install gptty
 ```
+
+Now, you can run the chat with `gptty`.
 
 
 You can also install from git:
@@ -18,14 +20,14 @@ You can also install from git:
 ```
 cd ~/Code # replace this with whatever directory you want to use
 git clone https://github.com/signebedi/gptty.git
+cd gptty/
 
 # now install the requirements
 python3 -m venv venv
 source venv/bin/activate
-pip install -r gptty/requirements.txt
+pip install -r requirements.txt
 
-# now run it (make sure your venv is running)
-cd ~/Code/gptty # replace this with whatever directory you want to use
+# now run it (make sure your virtualenv is running)
 python gptty
 ```
 
@@ -33,7 +35,7 @@ If you experience an error, try [configuring](#configuration) the app.
 
 ## Configuration
 
-`gptty` reads configuration settings from a file named gptty.ini located in the same directory as the main script. The file uses the INI file format, which consists of sections, each with its own key-value pairs.
+`gptty` reads configuration settings from a file named `gptty.ini`, which should be located in the same directory that you are running `gptty` from. The file uses the INI file format, which consists of sections, each with its own key-value pairs.
 
 | Key    | Type | Default Value    | Description |
 | -------- | ------- | -------- | ------- |

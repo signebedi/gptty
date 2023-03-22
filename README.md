@@ -6,7 +6,8 @@ Chat GPT wrapper in your TTY
 
 ## Installation
 
-On linux, run:
+
+You can also install on :
 
 ```
 cd ~/Code # replace this with whatever directory you want to use
@@ -15,10 +16,10 @@ git clone https://github.com/signebedi/gptty.git
 # now install the requirements
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r gptty/requirements.txt
 
 # now run it (make sure your venv is running)
-cd ~/Code # replace this with whatever directory you want to use
+cd ~/Code/gptty # replace this with whatever directory you want to use
 python gptty
 ```
 

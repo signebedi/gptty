@@ -13,8 +13,6 @@ You can install `gptty` on pip:
 pip install gptty
 ```
 
-And then you can verify it is working by running `gptty --help`.
-
 You can also install from git:
 
 ```
@@ -26,12 +24,9 @@ cd gptty/
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-
-# now run it (make sure your virtualenv is running)
-gptty --help
 ```
 
-If you experience an error, try [configuring](#configuration) the app.
+Now, you can verify it is working by running `gptty --help`. If you experience an error, try [configuring](#configuration) the app.
 
 ## Configuration
 

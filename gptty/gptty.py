@@ -38,6 +38,7 @@ HELP = """
 `[a:b] what is the meaning of life`         -   pass context positionally
 """
 
+# here we define the async call to the openai API that is used when running queries
 async def fetch_response(prompt, model_engine, max_tokens, temperature):
     return await openai.Completion.acreate(
         engine=model_engine,
@@ -48,7 +49,8 @@ async def fetch_response(prompt, model_engine, max_tokens, temperature):
         stop=None,
         timeout=15,
     )
-    
+
+# here we design the wait graphic that is called while awaiting responses
 async def wait_graphic():
     while True:
         # for i in range(1, 11):
@@ -63,6 +65,7 @@ async def wait_graphic():
             print("\b" * 10, end="", flush=True)
 
 
+# this is used when we run the `chat` command
 async def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None):
 
     # Authenticate with OpenAI using your API key
@@ -149,12 +152,12 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
 
             # here we update the pandas reference object, see 
             # https://github.com/signebedi/gptty/issues/15
-            df = pd.concat([df, pd.DataFrame({"timestamp":[timestamp],"tag":[tag],"question":[question],"response":[response_text],})])
+            df = pd.concat([df, pd.DataFrame({"timestamp":[timestamp],"tag":[tag],"question":[question],"response":[response_text],})], ignore_index=True)
 
 
 
 
-
+# this is used when we run the `query` command
 async def run_query(questions:list, tag:str, configs=get_config_data(), log_responses=True, config_path=None):
 
     if not os.path.exists(config_path):
@@ -223,8 +226,3 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             with open (configs['output_file'], 'a') as f:
                 f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{response_text.replace('|','')}\n")
-
-            # here we update the pandas reference object, see 
-            # https://github.com/signebedi/gptty/issues/15
-            df = pd.concat([df, pd.DataFrame({"timestamp":[timestamp],"tag":[tag],"question":[question],"response":[response_text],})])
-

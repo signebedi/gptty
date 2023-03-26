@@ -16,6 +16,7 @@ __email__ = "signe@atreeus.com"
 import click
 import os
 import asyncio
+import pandas as pd
 
 # app specific requirements
 from gptty.config import get_config_data
@@ -25,6 +26,19 @@ from gptty.gptty import create_chat_room, run_query
 CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
+
+# return a simple pandas df of the logged questions
+def return_log_as_df(configs):
+    # here we add a pandas df reference object, see 
+    # https://github.com/signebedi/gptty/issues/15
+    try:
+        df = pd.read_csv(configs['output_file'], header=None,sep='|').fillna('')
+        df.columns = ['timestamp','tag','question','response']
+    except:
+        df = pd.DataFrame(columns=['timestamp','tag','question','response'])
+    return df
+
+
 # borrowed version callback from https://click.palletsprojects.com/en/7.x/options/#callbacks-and-eager-options
 def print_version(ctx, param, value, version=__version__):
     if not value or ctx.resilient_parsing:
@@ -104,9 +118,27 @@ async def query_async_wrapper(config_path, question, tag):
   await run_query(questions=question, tag=tag, configs=configs, config_path=config_path)
 
 
+@click.command()
+@click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
+def log(config_path):
+  """
+  Get log of past queries
+  """
+  # load the app configs
+  configs = get_config_data(config_file=config_path)
+  
+  # create the output file if it doesn't exist
+  with open (configs['output_file'], 'a'): pass
+
+  df = return_log_as_df(configs)
+
+  click.echo(df)
+
+
 
 main.add_command(chat)
 main.add_command(query)
+main.add_command(log)
 
 if __name__ == "__main__":
   main()

@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='gptty',
-    version="0.1.3",
+    version="0.2.0",
     description='Chat GPT wrapper in your TTY ',
     author='Sig Janoska-Bedi',
     author_email='signe@atreeus.com',

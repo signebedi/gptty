@@ -38,8 +38,8 @@ def main():
   pass
 
 
-@click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
 @click.command()
+@click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
 def chat(config_path):
   """
   Run the gptty chat client
@@ -75,8 +75,18 @@ def chat(config_path):
   # Run the main function
   create_chat_room(configs=configs, config_path=config_path)
 
+@click.command()
+@click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
+@click.option('--question', '-q', multiple=True, help='Repeatable list of questions.')
+@click.option('--tag', '-t', default=None, help='Tag to categorize your query. [optional]')
+def query(config_path, question, tag):
+  """
+  Submit a gptty query
+  """
+
 
 main.add_command(chat)
+main.add_command(query)
 
 if __name__ == "__main__":
     main()

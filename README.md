@@ -7,14 +7,13 @@ Chat GPT wrapper in your TTY
 
 ## Installation
 
-You can install `gptty` on pip
+You can install `gptty` on pip:
 
 ```
 pip install gptty
 ```
 
-Now, you can run the chat with `gptty`.
-
+And then you can verify it is working by running `gptty --help`.
 
 You can also install from git:
 
@@ -66,7 +65,13 @@ This repository provides a sample configuration file `assets/gptty.ini.example` 
 
 The chat feature provides an interactive chat interface to communicate with ChatGPT. You can ask questions and receive responses in real-time.
 
-To start the chat interface, run `gptty chat`. You can also specify a custom configuration file path by running `gptty chat --config_path /path/to/your/gptty.ini`. Inside the chat interface, you can type your questions or commands directly. To view the list of available commands, type `:help`, which will show the following options.
+To start the chat interface, run `gptty chat`. You can also specify a custom configuration file path by running: 
+
+```
+gptty chat --config_path /path/to/your/gptty.ini
+``` 
+
+Inside the chat interface, you can type your questions or commands directly. To view the list of available commands, type `:help`, which will show the following options.
 
 | Metacommand    | Description    | 
 | -------- | ------- | 
@@ -97,7 +102,22 @@ You can type a question into the prompt anytime, and it will generate a response
 
 The query feature allows you to submit a single or multiple questions to ChatGPT and receive the answers directly in the command line.
 
-To use the query feature, run something like `gptty query --question "What is the capital of France?" --question "What is the largest mammal?"`. You can also provide an optional tag to categorize your query: `gptty query --question "What is the capital of France?" --tag "geography"`. You can specify a custom configuration file path if needed: `gptty query --config_path /path/to/your/gptty.ini --question "What is the capital of France?"`.
+To use the query feature, run something like:
+
+```
+gptty query --question "What is the capital of France?" --question "What is the largest mammal?"
+```
+
+You can also provide an optional tag to categorize your query: 
+
+```
+gptty query --question "What is the capital of France?" --tag "geography"
+``` 
+
+You can specify a custom configuration file path if needed: 
+```
+gptty query --config_path /path/to/your/gptty.ini --question "What is the capital of France?"
+```
 
 Remember that gptty uses a configuration file (by default gptty.ini) to store settings like API keys, model configurations, and output file paths. Make sure you have a valid configuration file before running gptty commands.
 
@@ -116,4 +136,10 @@ Here is an example of what this might look like, using questions tagged as `[sha
 
 ![context example](assets/context_example.png)
 
-When you are using the `query` subcommand, follow the same steps described above but, instead of prepending the text of your questions with your desired tag, use the `--tag` option to include the tag when submitting your query. For example, if the context of your question is "cooking," you can use `gptty --question "some question" --tag cooking`. The application will save your tagged question and response in the output file specified in the config file.
+When you are using the `query` subcommand, follow the same steps described above but, instead of prepending the text of your questions with your desired tag, use the `--tag` option to include the tag when submitting your query. For example, if the context of your question is "cooking," you can use:
+
+```
+gptty --question "some question" --tag cooking
+```
+
+The application will save your tagged question and response in the output file specified in the config file.

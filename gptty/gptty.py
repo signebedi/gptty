@@ -11,6 +11,8 @@ import time
 from datetime import datetime
 import click
 import pandas as pd
+import asyncio
+from aioconsole import ainput
 
 # app specific requirements
 from gptty.tagging import get_tag_from_text
@@ -35,8 +37,32 @@ HELP = """
 `[a:b] what is the meaning of life`         -   pass context positionally
 """
 
+async def fetch_response(prompt, model_engine, max_tokens, temperature):
+    return await openai.Completion.acreate(
+        engine=model_engine,
+        prompt=prompt,
+        max_tokens=max_tokens,
+        temperature=temperature,
+        n=1,
+        stop=None,
+        timeout=15,
+    )
+    
+async def wait_graphic():
+    while True:
+        # for i in range(1, 11):
+        #     print("." * i + " " * (9 - i), end="", flush=True)
+        #     await asyncio.sleep(0.1)
+        #     print("\b" * 10, end="", flush=True)
 
-def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None):
+        # Show the waiting graphic
+        for i in range(10):
+            print("." * i + " " * (9 - i), end="", flush=True)
+            await asyncio.sleep(0.1)
+            print("\b" * 10, end="", flush=True)
+
+
+async def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None):
 
     # Authenticate with OpenAI using your API key
     # click.echo (configs['api_key'])
@@ -62,7 +88,7 @@ def create_chat_room(configs=get_config_data(), log_responses=True, config_path=
     # Continuously send and receive messages
     while True:
         # Get user input
-        i = input(f"{CYAN}> ")
+        i = await ainput(f"{CYAN}> ")
         tag,question = get_tag_from_text(i)
         prompt_length = len(question)
 
@@ -87,26 +113,19 @@ def create_chat_room(configs=get_config_data(), log_responses=True, config_path=
             click.echo('\nPlease provide a valid command.\n')
             continue
 
-
-
-        # Show the waiting graphic
-        for i in range(10):
-            print("." * i + " " * (9 - i), end="", flush=True)
-            time.sleep(0.1)
-            print("\b" * 10, end="", flush=True)
-
+        # we create the callable wait_graphic task
+        wait_task = asyncio.create_task(wait_graphic())
 
         fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file']) + ' ' + question
 
-        response = openai.Completion.create(
-            engine=model_engine,
-            prompt=fully_contextualized_question,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            n=1,
-            stop=None,
-            timeout=15,
-        )
+        response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature))
+
+        # Wait for the response to be completed
+        response = await response_task
+
+        # Cancel the wait graphic task
+        wait_task.cancel()
+        print("\b" * 10 , end="", flush=True)
 
         response_text = response.choices[0].text.strip().replace("\n", "")
 

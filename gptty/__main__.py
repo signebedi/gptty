@@ -15,6 +15,7 @@ __email__ = "signe@atreeus.com"
 # general packages
 import click
 import os
+import asyncio
 
 # app specific requirements
 from gptty.config import get_config_data
@@ -41,11 +42,14 @@ def main():
 @click.command()
 @click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
 def chat(config_path):
+  
   """
   Run the gptty chat client
   """
 
+  asyncio.run(chat_async_wrapper(config_path))
 
+async def chat_async_wrapper(config_path):
   title = r"""
                  _   _         
      ____  ____ | | | |        
@@ -73,7 +77,10 @@ def chat(config_path):
   with open (configs['output_file'], 'a'): pass
   
   # Run the main function
-  create_chat_room(configs=configs, config_path=config_path)
+  # create_chat_room(configs=configs, config_path=config_path)
+  # asyncio.run(create_chat_room(configs=configs, config_path=config_path))
+  await create_chat_room(configs=configs, config_path=config_path)
+
 
 @click.command()
 @click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
@@ -89,4 +96,4 @@ main.add_command(chat)
 main.add_command(query)
 
 if __name__ == "__main__":
-    main()
+  main()

@@ -28,14 +28,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # now run it (make sure your virtualenv is running)
-python gptty
+gptty --help
 ```
 
 If you experience an error, try [configuring](#configuration) the app.
 
 ## Configuration
 
-`gptty` reads configuration settings from a file named `gptty.ini`, which should be located in the same directory that you are running `gptty` from. The file uses the INI file format, which consists of sections, each with its own key-value pairs.
+`gptty` reads configuration settings from a file named `gptty.ini`, which the app expects to be located in the same directory that you are running `gptty` from unless you pass a custom `config_file`. The file uses the INI file format, which consists of sections, each with its own key-value pairs.
 
 | Key    | Type | Default Value    | Description |
 | -------- | ------- | -------- | ------- |
@@ -57,13 +57,13 @@ You can modify the settings in the configuration file to suit your needs. If a k
 api_key=my_api_key
 ```
 
-The application provides a sample configuration file `gptty.ini.example` that you can use as a starting point. 
+This repository provides a sample configuration file `assets/gptty.ini.example` that you can use as a starting point. 
 
 ## Usage
 
 #### Chat
 
-The chat feature provides an interactive chat interface to communicate with ChatGPT. You can ask questions and receive responses in real-time, while maintaining context.
+The chat feature provides an interactive chat interface to communicate with ChatGPT. You can ask questions and receive responses in real-time.
 
 To start the chat interface, run `gptty chat`. You can also specify a custom configuration file path by running `gptty chat --config_path /path/to/your/gptty.ini`.Inside the chat interface, you can type your questions or commands directly. To view the list of available commands, type `:help`, which will show the following options.
 

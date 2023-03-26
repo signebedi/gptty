@@ -23,8 +23,16 @@ from gptty.gptty import create_chat_room
 CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
+# borrowed version callback from https://click.palletsprojects.com/en/7.x/options/#callbacks-and-eager-options
+def print_version(ctx, param, value, version=__version__):
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo(f'gptty version {version}')
+    ctx.exit()
 
 @click.group()
+@click.option('--version', '-v', is_flag=True, callback=print_version,
+              expose_value=False, is_eager=True, help="Show app version.")
 def main():
   pass
 

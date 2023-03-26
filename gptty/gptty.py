@@ -36,7 +36,7 @@ HELP = """
 """
 
 
-def create_chat_room(configs=get_config_data(), log_responses=True):
+def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None):
 
     # Authenticate with OpenAI using your API key
     # click.echo (configs['api_key'])
@@ -76,7 +76,7 @@ def create_chat_room(configs=get_config_data(), log_responses=True):
             click.echo ('\nGoodbye ... \n')
             break
         elif i.strip() == ':configs':
-            c = f'{"|".join(f"{key}: {value}" for key, value in configs.items())}'.replace('|','\n')
+            c = f'config_path: {config_path}|{"|".join(f"{key}: {value}" for key, value in configs.items())}'.replace('|','\n')
             click.echo (f'\n{c}\n')
             continue
         elif i.strip() == ':context':

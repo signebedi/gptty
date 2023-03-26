@@ -65,7 +65,7 @@ This repository provides a sample configuration file `assets/gptty.ini.example` 
 
 The chat feature provides an interactive chat interface to communicate with ChatGPT. You can ask questions and receive responses in real-time.
 
-To start the chat interface, run `gptty chat`. You can also specify a custom configuration file path by running `gptty chat --config_path /path/to/your/gptty.ini`.Inside the chat interface, you can type your questions or commands directly. To view the list of available commands, type `:help`, which will show the following options.
+To start the chat interface, run `gptty chat`. You can also specify a custom configuration file path by running `gptty chat --config_path /path/to/your/gptty.ini`. Inside the chat interface, you can type your questions or commands directly. To view the list of available commands, type `:help`, which will show the following options.
 
 | Metacommand    | Description    | 
 | -------- | ------- | 
@@ -102,7 +102,7 @@ Remember that gptty uses a configuration file (by default gptty.ini) to store se
 
 ## Context
 
-Tagging text for context when writing a query on this app can help improve the accuracy of the generated response. Here are the steps to follow:
+Tagging text for context when using the `chat` and `query` subcommands in this app can help improve the accuracy of the generated responses. Here's how the app handles context with the `chat` subcommand:
 
 1. Identify the context of your question or statement. 
 2. Assign a tag to that context. The tag can be a word or short phrase that describes the context like `bananas` or `shakespeare`.
@@ -114,3 +114,5 @@ Make sure to use the same tag consistently for all related queries.
 Here is an example of what this might look like, using questions tagged as `[shakespeare]`. Notice how, in the second question, the name 'William Shakespeare' is not mentioned at all.
 
 ![context example](assets/context_example.png)
+
+When you are using the `query` subcommand, follow the same steps described above but, instead of prepending the text of your questions with your desired tag, use the `--tag` option to include the tag when submitting your query. For example, if the context of your question is "cooking," you can use `gptty --question "some question" --tag cooking`. The application will save your tagged question and response in the output file specified in the config file.

@@ -24,7 +24,17 @@ CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 
+@click.group()
 def main():
+  pass
+
+@click.command()
+def chat():
+  """
+  Run the gptty chat client
+  """
+
+
   title = r"""
                  _   _         
      ____  ____ | | | |        
@@ -47,6 +57,9 @@ def main():
   
   # Run the main function
   create_chat_room(configs=configs)
-  
+
+
+main.add_command(chat)
+
 if __name__ == "__main__":
     main()

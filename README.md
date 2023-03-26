@@ -57,17 +57,21 @@ You can modify the settings in the configuration file to suit your needs. If a k
 api_key=my_api_key
 ```
 
-The application provides a sample configuration file `gptty.ini.example` that you can use as a starting point.
+The application provides a sample configuration file `gptty.ini.example` that you can use as a starting point. 
 
 ## Usage
 
-You can use the following metacommands from within the chat interface:
+#### Chat
+
+The chat feature provides an interactive chat interface to communicate with ChatGPT. You can ask questions and receive responses in real-time, while maintaining context.
+
+To start the chat interface, run `gptty chat`. You can also specify a custom configuration file path by running `gptty chat --config_path /path/to/your/gptty.ini`.Inside the chat interface, you can type your questions or commands directly. To view the list of available commands, type `:help`, which will show the following options.
 
 | Metacommand    | Description    | 
 | -------- | ------- | 
 | :help | Display a list of available commands and their descriptions.   |
 | :quit | Exit ChatGPT.   |
-| :configs | Display the current configuration settings.   |
+| :logs | Display the current configuration settings.   |
 | :context[a:b] | Display the context history, optionally specifying a range a and b. *Under development*   |
 
 To use a command, simply type it into the command prompt and press Enter. For example, use the following command to display the current configuration settings in the terminal:
@@ -86,7 +90,15 @@ max_tokens: 250
 max_context_length: 5000
 ```
 
-You can type a question into the prompt anytime, and it will generate a reponse for you. If you'd like to share context across queries, see the [context](#context) section below.
+You can type a question into the prompt anytime, and it will generate a response for you. If you'd like to share context across queries, see the [context](#context) section below.
+
+#### Query
+
+The query feature allows you to submit a single or multiple questions to ChatGPT and receive the answers directly in the command line.
+
+To use the query feature, run something like `gptty query --question "What is the capital of France?" --question "What is the largest mammal?"`. You can also provide an optional tag to categorize your query: `gptty query --question "What is the capital of France?" --tag "geography"`. You can specify a custom configuration file path if needed: `gptty query --config_path /path/to/your/gptty.ini --question "What is the capital of France?"`.
+
+Remember that gptty uses a configuration file (by default gptty.ini) to store settings like API keys, model configurations, and output file paths. Make sure you have a valid configuration file before running gptty commands.
 
 ## Context
 

@@ -24,6 +24,7 @@ cd gptty/
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+pip install -e ./ # install the local package [optional but recommended to run as an executable]
 ```
 
 Now, you can verify it is working by running `gptty --help`. If you experience an error, try [configuring](#configuration) the app.

@@ -163,3 +163,5 @@ You can send each question from the `questions.txt` file to the `gptty query` co
 ```bash
 xargs -d '\n' -I {} gptty query --question "{}" < questions.txt
 ```
+
+![question chain example](assets/question_chain_example.png)

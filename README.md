@@ -138,3 +138,27 @@ gptty --question "some question" --tag cooking
 ```
 
 The application will save your tagged question and response in the output file specified in the config file.
+
+
+## Scripting
+
+You can automate the process of sending multiple questions to the `gptty query` command using a bash script. This can be particularly useful if you have a list of questions stored in a file, and you want to process them all at once. For example, let's say you have a file `questions.txt` with each question on a new line, like below.
+
+```
+What are the key differences between machine learning, deep learning, and artificial intelligence?
+How do I choose the best programming language for a specific project or task?
+Can you recommend some best practices for code optimization and performance improvement?
+What are the essential principles of good software design and architecture?
+How do I get started with natural language processing and text analysis in Python?
+What are some popular Python libraries or frameworks for building web applications?
+Can you suggest some resources to learn about data visualization and its implementation in Python?
+What are some important concepts in cybersecurity, and how can I apply them to my projects?
+How do I ensure that my machine learning models are fair, ethical, and unbiased?
+Can you recommend strategies for staying up-to-date with the latest trends and advancements in technology and programming?
+```
+
+You can send each question from the `questions.txt` file to the `gptty query` command using the following bash one-liner:
+
+```bash
+xargs -d '\n' -I {} gptty query --question "{}" < questions.txt
+```

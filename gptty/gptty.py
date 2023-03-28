@@ -71,8 +71,8 @@ async def fetch_response(prompt, model_engine, max_tokens, temperature, model_ty
         )
 
     if model_type == 'v1/chat/completions':
-        click.echo(f"\n{CYAN}SUCCESS validating model type 'v1/chat/completions'. Feature still under development. See <https://github.com/signebedi/gptty/issues/31> for more info.{RESET}\n")
-        return None
+        # click.echo(f"\n{CYAN}SUCCESS validating model type 'v1/chat/completions'. Feature still under development. See <https://github.com/signebedi/gptty/issues/31> for more info.{RESET}\n")
+        # return None
 
         return await openai.ChatCompletion.acreate( 
             model = model_engine,
@@ -172,7 +172,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only']) + ' ' + question
+        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question)
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 
@@ -186,8 +186,8 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         if not response:
             continue
 
-        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0].text['content'].strip()
-        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
+        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip()
+        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip().replace("\n", " ")
 
         if configs['preserve_new_lines']:
             click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
@@ -262,7 +262,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only']) + ' ' + question
+        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question)
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 
@@ -273,8 +273,8 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         wait_task.cancel()
         print("\b" * 10 , end="", flush=True)
 
-        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0].text['content'].strip()
-        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
+        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip()
+        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip().replace("\n", " ")
 
         if configs['preserve_new_lines']:
             click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")

@@ -45,15 +45,35 @@ def return_most_common_phrases(text:str, weight_recent=True) -> list:
     # Get the most frequent key phrases
     return [phrase for phrase, count in sorted(noun_phrase_weighted_counts.items(), key=lambda x: x[1], reverse=True)]
 
-def get_context(tag:str, max_context_length:int, output_file:str, context_keywords_only:bool=True) -> str:
+def get_context(tag:str, max_context_length:int, output_file:str, context_keywords_only:bool=True, model_type:str=None, question:str=None) -> str:
 
     if len(tag) < 1:
         return ""
 
-    context = ""
+
     with open (output_file,'r') as f:
         text = f.readlines()
     
+
+    if model_type == 'v1/chat/completions':
+        context = []
+
+        for row in text:
+            data = row.replace('\n','').split('|')
+
+            # verifying the length of 
+            if (sum(len(item["content"].split()) for item in context) + len(data[2].split()) + len(data[3].split())) > max_context_length:
+                break
+
+            if data[1] == tag:
+                context.append({"role": "user", "content": data[2]})
+                context.append({"role": "assistant", "content": data[3]})
+
+        context.append({"role": "user", "content": question})
+        print(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
+        return context
+
+    context = ""
     for row in text:
         data = row.replace('\n','').split('|')
 
@@ -90,4 +110,4 @@ def get_context(tag:str, max_context_length:int, output_file:str, context_keywor
 
     # print(f'[debug]\nlength: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
     
-    return context
+    return context + ' ' + question

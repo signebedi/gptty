@@ -44,6 +44,7 @@ Now, you can verify it is working by running `gptty --help`. If you experience a
 | max_tokens | Integer     | 250 |    The maximum number of tokens to generate for the response  |
 | max_context_length    | Integer    | 150    |   The maximum length of the input context  |
 | context_keywords_only    | Bool    | True    |   Tokenize keywords to reduce API usage   |
+| preserve_new_lines    | Bool    | False    |   Keep original formatting of response   |
 
 
 You can modify the settings in the configuration file to suit your needs. If a key is not present in the configuration file, the default value will be used. The [main] section is used to specify the program's settings. 

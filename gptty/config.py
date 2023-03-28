@@ -23,6 +23,7 @@ def get_config_data(config_file='gptty.ini'):
         'max_tokens': 250,
         'max_context_length': 150,
         'context_keywords_only': True,
+        'preserve_new_lines': False,
     }
 
     # read the configuration file (if it exists)
@@ -38,6 +39,9 @@ def get_config_data(config_file='gptty.ini'):
         'max_tokens': config.getint('main', 'max_tokens', fallback=25),
         'max_context_length': config.getint('main', 'max_context_length', fallback=150),
         'context_keywords_only': config.getboolean('main', 'context_keywords_only', fallback=True),
+        'preserve_new_lines': config.getboolean('main', 'preserve_new_lines', fallback=False),
     }
+
+    
 
     return parsed_data

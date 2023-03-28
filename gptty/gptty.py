@@ -186,19 +186,23 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         if not response:
             continue
 
-        response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
+        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0].text['content'].strip()
+        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
 
-        # click.echo the response in color
-        click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
+        if configs['preserve_new_lines']:
+            click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
+        else:
+            # click.echo the response in color
+            click.echo(f"\b{RED}[{configs['gpt_name']}] {deformatted_response_text}{RESET}\n")
 
         if log_responses:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             with open (configs['output_file'], 'a') as f:
-                f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{response_text.replace('|','')}\n")
+                f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{deformatted_response_text.replace('|','')}\n")
 
             # here we update the pandas reference object, see 
             # https://github.com/signebedi/gptty/issues/15
-            df = pd.concat([df, pd.DataFrame({"timestamp":[timestamp],"tag":[tag],"question":[question],"response":[response_text],})], ignore_index=True)
+            df = pd.concat([df, pd.DataFrame({"timestamp":[timestamp],"tag":[tag],"question":[question],"response":[deformatted_response_text],})], ignore_index=True)
 
 
 
@@ -269,12 +273,16 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         wait_task.cancel()
         print("\b" * 10 , end="", flush=True)
 
-        response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
+        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0].text['content'].strip()
+        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
 
-        # click.echo the response in color
-        click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
+        if configs['preserve_new_lines']:
+            click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
+        else:
+            # click.echo the response in color
+            click.echo(f"\b{RED}[{configs['gpt_name']}] {deformatted_response_text}{RESET}\n")
 
         if log_responses:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             with open (configs['output_file'], 'a') as f:
-                f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{response_text.replace('|','')}\n")
+                f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{deformatted_response_text.replace('|','')}\n")

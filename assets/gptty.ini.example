@@ -1,6 +1,5 @@
 [main]
 api_key=SOME_KEY_HERE
-gpt_version=3
 your_name=question
 gpt_name=response
 output_file=output.txt

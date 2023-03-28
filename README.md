@@ -36,7 +36,6 @@ Now, you can verify it is working by running `gptty --help`. If you experience a
 | Key    | Type | Default Value    | Description |
 | -------- | ------- | -------- | ------- |
 | api_key  | String    | ""  |   The API key for OpenAI's GPT service  |
-| gpt_version | String     | "3" |    The version of GPT to use  |
 | your_name    | String    | "question"    |   The name of the input prompt  |
 | gpt_name  | String    | "response"  |   The name of the generated response  |
 | output_file | String     | "output.txt" |    The name of the file where the output will be saved  |
@@ -83,7 +82,6 @@ To use a command, simply type it into the command prompt and press Enter. For ex
 > :configs
 
 api_key: SOME_CONFIG_HERE
-gpt_version: 3
 your_name: question
 gpt_name: response
 output_file: output.txt

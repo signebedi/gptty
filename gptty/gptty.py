@@ -12,6 +12,7 @@ from datetime import datetime
 import click
 import pandas as pd
 import os
+import sys
 import asyncio
 from aioconsole import ainput
 
@@ -64,6 +65,22 @@ async def wait_graphic():
             await asyncio.sleep(0.1)
             print("\b" * 10, end="", flush=True)
 
+## VALIDATE MODELS - these functions are use to validate the model passed by the user and raises an exception if 
+## the model does not exist.
+def get_available_models():
+    response = openai.Model.list()
+    return [model.id for model in response['data']]
+
+def is_valid_model(model_name):
+    available_models = get_available_models()
+    return model_name in available_models
+
+def validate_model_type(model_name):
+    if ('davinci' in model_name or 'curie' in model_name) and is_valid_model(model_name):
+        return 'v1/completions'
+    elif 'gpt' in model_name and is_valid_model(model_name):
+        return 'v1/chat/completions'
+    raise Exception()
 
 # this is used when we run the `chat` command
 async def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None):
@@ -88,11 +105,17 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
         return
 
-
     # Set the parameters for the OpenAI completion API
     model_engine = configs['model'].rstrip('\n')
     temperature = configs['temperature'] # controls the creativity of the response
     max_tokens = configs['max_tokens']  # the maximum length of the generated response
+
+
+    try:
+        model_type = validate_model_type(model_engine)
+    except:
+        click.echo(f"{RED}FAILED to validate the model name '{model_engine}'. Are you sure this is a valid OpenAI model? Check the available models at <https://platform.openai.com/docs/models/overview> and try again.{RESET}")
+        return
 
     # Continuously send and receive messages
     while True:
@@ -111,7 +134,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
             click.echo ('\nGoodbye ... \n')
             break
         elif i.strip() in [':configs',':c']:
-            c = f'config_path: {config_path}|{"|".join(f"{key}: {value}" for key, value in configs.items())}'.replace('|','\n')
+            c = f'config_path: {config_path}|model_type: {model_type}|{"|".join(f"{key}: {value}" for key, value in configs.items())}'.replace('|','\n')
             click.echo (f'\n{c}\n')
             continue
         elif i.strip() in [':log',':l']:
@@ -192,6 +215,12 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
     model_engine = configs['model'].rstrip('\n')
     temperature = configs['temperature'] # controls the creativity of the response
     max_tokens = configs['max_tokens']  # the maximum length of the generated response
+
+    try:
+        model_type = validate_model_type(model_engine)
+    except:
+        click.echo(f"{RED}FAILED to validate the model name '{model_engine}'. Are you sure this is a valid OpenAI model? Check the available models at <https://platform.openai.com/docs/models/overview> and try again.{RESET}")
+        return
 
     # Continuously send and receive messages
     for question in questions:

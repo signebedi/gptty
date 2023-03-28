@@ -7,11 +7,12 @@ __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
 from textblob import TextBlob
-from collections import Counter
+from collections import Counter, defaultdict
 from nltk.corpus import stopwords
 
 
-def return_most_common_phrases(text:str) -> list:
+def return_most_common_phrases(text:str, weight_recent=True) -> list:
+
     # Extract noun phrases using TextBlob
     blob = TextBlob(text)
     noun_phrases = blob.noun_phrases
@@ -25,12 +26,24 @@ def return_most_common_phrases(text:str) -> list:
         if filtered_words:
             filtered_noun_phrases.append(' '.join(filtered_words))
 
-    # Count the frequency of the noun phrases
-    noun_phrase_counts = Counter(filtered_noun_phrases)
+    if not weight_recent:
+
+        # Count the frequency of the noun phrases
+        noun_phrase_counts = Counter(filtered_noun_phrases)
+
+        # Get the most frequent key phrases
+        return [phrase for phrase, count in noun_phrase_counts.most_common()]
+
+    # Count the weighted frequency of the noun phrases
+    noun_phrase_weighted_counts = defaultdict(int)
+    total_phrases = len(filtered_noun_phrases)
+
+    for i, phrase in enumerate(filtered_noun_phrases):
+        weight = (i + 1) / total_phrases  # Assign a higher weight to phrases that appear later in the text
+        noun_phrase_weighted_counts[phrase] += weight
 
     # Get the most frequent key phrases
-    return [phrase for phrase, count in noun_phrase_counts.most_common()]
-
+    return [phrase for phrase, count in sorted(noun_phrase_weighted_counts.items(), key=lambda x: x[1], reverse=True)]
 
 def get_context(tag:str, max_context_length:int, output_file:str, context_keywords_only:bool=True) -> str:
 

@@ -74,7 +74,17 @@ async def fetch_response(prompt, model_engine, max_tokens, temperature, model_ty
         click.echo(f"\n{CYAN}SUCCESS validating model type 'v1/chat/completions'. Feature still under development. See <https://github.com/signebedi/gptty/issues/31> for more info.{RESET}\n")
         return None
 
-    click.echo(f"\n{RED}FAILED to validate the model type '{model_type}'. Are you sure this is a valid OpenAI model endpoint? Check the available model endpoints at <https://platform.openai.com/docs/models/model-endpoint-compatibility> and try again.{RESET}\n")
+        return await openai.ChatCompletion.acreate( 
+            model = model_engine,
+            messages = prompt,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            n=1,
+            stop=None,
+            timeout=15,
+        )
+
+    click.echo(f"\n{RED}FAILED to validate the model type '{model_type}'. Are you sure this is a valid OpenAI model endpoint? Check the available model endpoints at <https://platform.openai.com/docs/models/model-endpoint-compatibility>. If you believe this is a bug, submit a bug request at <https://github.com/signebedi/gptty/issues>.{RESET}\n")
     return None
 
 
@@ -176,7 +186,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         if not response:
             continue
 
-        response_text = response.choices[0].text.strip().replace("\n", "")
+        response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
 
         # click.echo the response in color
         click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
@@ -259,7 +269,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         wait_task.cancel()
         print("\b" * 10 , end="", flush=True)
 
-        response_text = response.choices[0].text.strip().replace("\n", "")
+        response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0].text['content'].strip().replace("\n", " ")
 
         # click.echo the response in color
         click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")

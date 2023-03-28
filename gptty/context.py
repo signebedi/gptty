@@ -58,7 +58,7 @@ def get_context(tag:str, max_context_length:int, output_file:str, context_keywor
     if model_type == 'v1/chat/completions':
         context = []
 
-        for row in text:
+        for row in reversed(text):
             data = row.replace('\n','').split('|')
 
             # verifying the length of 
@@ -66,8 +66,8 @@ def get_context(tag:str, max_context_length:int, output_file:str, context_keywor
                 break
 
             if data[1] == tag:
-                context.append({"role": "user", "content": data[2]})
-                context.append({"role": "assistant", "content": data[3]})
+                context = [{"role": "assistant", "content": data[3]}] + context
+                context = [{"role": "user", "content": data[2]}] + context
 
         context.append({"role": "user", "content": question})
         # print(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like

@@ -5,6 +5,10 @@
 
 Chat GPT wrapper in your TTY
 
+## Model Support
+
+OpenAI supports a number of models in their API. \[[1](https://platform.openai.com/docs/models/model-endpoint-compatibility)\] Currently, gptty supports `Completions` (davinci, curie) and `ChatCompletions` (gpt-3.5-turbo, gpt-4). All you need to do is specify the model name in your [config](#configuration) (default is text-davinci-003), and the application will handle the rest. 
+
 ## Installation
 
 You can install `gptty` on pip:

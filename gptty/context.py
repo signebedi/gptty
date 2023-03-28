@@ -1,7 +1,7 @@
 __name__ = "gptty.context"
 __author__ = "Sig Janoska-Bedi"
 __credits__ = ["Sig Janoska-Bedi"]
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"

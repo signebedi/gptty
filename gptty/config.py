@@ -22,7 +22,8 @@ def get_config_data(config_file='gptty.ini'):
         'model': 'text-davinci-003',
         'temperature': 0.0,
         'max_tokens': 250,
-        'max_context_length': 5000,
+        'max_context_length': 150,
+        'context_keywords_only': True,
     }
 
     # read the configuration file (if it exists)
@@ -37,7 +38,8 @@ def get_config_data(config_file='gptty.ini'):
         'model': config.get('main', 'model', fallback='text-davinci-003'),
         'temperature': config.getfloat('main', 'temperature', fallback=0.0),
         'max_tokens': config.getint('main', 'max_tokens', fallback=25),
-        'max_context_length': config.getint('main', 'max_context_length', fallback=5000),
+        'max_context_length': config.getint('main', 'max_context_length', fallback=150),
+        'context_keywords_only': config.getboolean('main', 'context_keywords_only', fallback=True),
     }
 
     return parsed_data

@@ -17,6 +17,7 @@ import click
 import os
 import asyncio
 import pandas as pd
+import nltk
 
 # app specific requirements
 from gptty.config import get_config_data
@@ -26,6 +27,18 @@ from gptty.gptty import create_chat_room, run_query
 CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
+
+# download nltk corpora if they are not already downloaded
+def download_nltk_data_if_needed(data_name):
+    try:
+        nltk.data.find(data_name)
+    except LookupError:
+        nltk.download(data_name.split('/')[-1])
+
+# Download 'stopwords', 'punkt', and 'brown' if they haven't been downloaded yet
+download_nltk_data_if_needed('corpora/stopwords')
+download_nltk_data_if_needed('tokenizers/punkt')
+download_nltk_data_if_needed('corpora/brown')
 
 # return a simple pandas df of the logged questions
 def return_log_as_df(configs):

@@ -7,4 +7,5 @@ output_file=output.txt
 model=text-davinci-003
 temperature=0.0
 max_tokens=250
-max_context_length=5000
+max_context_length=150
+context_keywords_only=True

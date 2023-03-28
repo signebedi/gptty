@@ -43,7 +43,8 @@ Now, you can verify it is working by running `gptty --help`. If you experience a
 | model    | String    | "text-davinci-003"    |   The name of the GPT model to use  |
 | temperature  | Float    | 0.0  |   The temperature to use for sampling  |
 | max_tokens | Integer     | 250 |    The maximum number of tokens to generate for the response  |
-| max_context_length    | Integer    | 5000    |   The maximum length of the input context  |
+| max_context_length    | Integer    | 150    |   The maximum length of the input context  |
+| context_keywords_only    | Bool    | True    |   Should we tokenize keywords to reduce API usage?   |
 
 
 You can modify the settings in the configuration file to suit your needs. If a key is not present in the configuration file, the default value will be used. The [main] section is used to specify the program's settings. 

@@ -129,7 +129,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file']) + ' ' + question
+        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only']) + ' ' + question
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature))
 
@@ -206,7 +206,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file']) + ' ' + question
+        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only']) + ' ' + question
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature))
 

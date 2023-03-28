@@ -39,32 +39,6 @@ HELP = """
 `[a:b] what is the meaning of life`         -   pass context positionally
 """
 
-# here we define the async call to the openai API that is used when running queries
-async def fetch_response(prompt, model_engine, max_tokens, temperature):
-    return await openai.Completion.acreate(
-        engine=model_engine,
-        prompt=prompt,
-        max_tokens=max_tokens,
-        temperature=temperature,
-        n=1,
-        stop=None,
-        timeout=15,
-    )
-
-# here we design the wait graphic that is called while awaiting responses
-async def wait_graphic():
-    while True:
-        # for i in range(1, 11):
-        #     print("." * i + " " * (9 - i), end="", flush=True)
-        #     await asyncio.sleep(0.1)
-        #     print("\b" * 10, end="", flush=True)
-
-        # Show the waiting graphic
-        for i in range(10):
-            print("." * i + " " * (9 - i), end="", flush=True)
-            await asyncio.sleep(0.1)
-            print("\b" * 10, end="", flush=True)
-
 ## VALIDATE MODELS - these functions are use to validate the model passed by the user and raises an exception if 
 ## the model does not exist.
 def get_available_models():
@@ -81,6 +55,42 @@ def validate_model_type(model_name):
     elif 'gpt' in model_name and is_valid_model(model_name):
         return 'v1/chat/completions'
     raise Exception()
+
+# here we define the async call to the openai API that is used when running queries
+async def fetch_response(prompt, model_engine, max_tokens, temperature, model_type):
+    if model_type == 'v1/completions':
+
+        return await openai.Completion.acreate(
+            engine=model_engine,
+            prompt=prompt,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            n=1,
+            stop=None,
+            timeout=15,
+        )
+
+    if model_type == 'v1/chat/completions':
+        click.echo(f"\n{CYAN}SUCCESS validating model type 'v1/chat/completions'. Feature still under development. See <https://github.com/signebedi/gptty/issues/31> for more info.{RESET}\n")
+        return None
+
+    click.echo(f"\n{RED}FAILED to validate the model type '{model_type}'. Are you sure this is a valid OpenAI model endpoint? Check the available model endpoints at <https://platform.openai.com/docs/models/model-endpoint-compatibility> and try again.{RESET}\n")
+    return None
+
+
+# here we design the wait graphic that is called while awaiting responses
+async def wait_graphic():
+    while True:
+        # for i in range(1, 11):
+        #     print("." * i + " " * (9 - i), end="", flush=True)
+        #     await asyncio.sleep(0.1)
+        #     print("\b" * 10, end="", flush=True)
+
+        # Show the waiting graphic
+        for i in range(10):
+            print("." * i + " " * (9 - i), end="", flush=True)
+            await asyncio.sleep(0.1)
+            print("\b" * 10, end="", flush=True)
 
 # this is used when we run the `chat` command
 async def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None):
@@ -154,7 +164,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
 
         fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only']) + ' ' + question
 
-        response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature))
+        response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 
         # Wait for the response to be completed
         response = await response_task
@@ -162,6 +172,9 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         # Cancel the wait graphic task
         wait_task.cancel()
         print("\b" * 10 , end="", flush=True)
+
+        if not response:
+            continue
 
         response_text = response.choices[0].text.strip().replace("\n", "")
 
@@ -237,7 +250,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
 
         fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only']) + ' ' + question
 
-        response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature))
+        response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 
         # Wait for the response to be completed
         response = await response_task

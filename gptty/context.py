@@ -48,7 +48,7 @@ def return_most_common_phrases(text:str, weight_recent=True) -> list:
 def get_context(tag:str, max_context_length:int, output_file:str, context_keywords_only:bool=True, model_type:str=None, question:str=None) -> str:
 
     if len(tag) < 1:
-        return ""
+        return [{"role": "user", "content": question}] if model_type == 'v1/chat/completions' else "" 
 
 
     with open (output_file,'r') as f:
@@ -70,44 +70,47 @@ def get_context(tag:str, max_context_length:int, output_file:str, context_keywor
                 context.append({"role": "assistant", "content": data[3]})
 
         context.append({"role": "user", "content": question})
-        print(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
-        return context
+        # print(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
 
-    context = ""
-    for row in text:
-        data = row.replace('\n','').split('|')
-
-        if data[1] == tag:
-            for item in data[3].split():
-                # if len(context.split()) >= (max_context_length):
-                #     break
-                context += ' ' + item    
-
-            # ugh ... need to find a better way to handle this.   
-            if not context_keywords_only:
-                c = ""
-
-                for item in context.split():
-                    if not len(c.split()) >= (max_context_length): 
-                        break
-                    c += item
-
-                context = c
-
-    if context_keywords_only:
-
-        # here we overwrite the context string with just a list of keywords ... though this might 
-        # result in suboptimal results without the full sentences ..
-        phrases = return_most_common_phrases(context)
+    else:
         context = ""
+        for row in text:
+            data = row.replace('\n','').split('|')
 
-        for phrase in phrases:
-            # somewhat complex logic ... what we are asking, is whether the additional
-            # phrase will push our context over the character limit.
-            if len (context.split()) > ( max_context_length - len (phrase.split()) ):
-                break
-            context += " " + phrase
+            if data[1] == tag:
+                for item in data[3].split():
+                    # if len(context.split()) >= (max_context_length):
+                    #     break
+                    context += ' ' + item    
 
-    # print(f'[debug]\nlength: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
+                # ugh ... need to find a better way to handle this.   
+                if not context_keywords_only:
+                    c = ""
+
+                    for item in context.split():
+                        if not len(c.split()) >= (max_context_length): 
+                            break
+                        c += item
+
+                    context = c
+
+        if context_keywords_only:
+
+            # here we overwrite the context string with just a list of keywords ... though this might 
+            # result in suboptimal results without the full sentences ..
+            phrases = return_most_common_phrases(context)
+            context = ""
+
+            for phrase in phrases:
+                # somewhat complex logic ... what we are asking, is whether the additional
+                # phrase will push our context over the character limit.
+                if len (context.split()) > ( max_context_length - len (phrase.split()) ):
+                    break
+                context += " " + phrase
+
+        # print(f'[debug]\nlength: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
+        context = context + ' ' + question
     
-    return context + ' ' + question
+    # from pprint import pprint
+    # pprint(context)
+    return context

@@ -1,1 +1,3 @@
 include requirements.txt
+include assets/context_example.png
+include assets/question_chain_example.png

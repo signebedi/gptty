@@ -7,7 +7,7 @@ __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
-def get_tag_from_text(user_input, replacement_string='-'):
+def old_get_tag_from_text(user_input, replacement_string='-'):
 
     # Initialize the tag and remaining text variables
     tag = None
@@ -58,3 +58,30 @@ def get_tag_from_text(user_input, replacement_string='-'):
         return tag,remaining_text
     else:
         return '',remaining_text
+
+
+def get_tag_from_text(user_input, replacement_string='-'):
+
+    tag = None
+    remaining_text = user_input.strip()
+
+    while tag is None and remaining_text != "":
+        first_word = remaining_text.lstrip().split()[0]
+
+        if first_word.startswith('['):
+            closing_bracket_pos = remaining_text.find(']')
+            if closing_bracket_pos != -1:
+                tag = remaining_text[1:closing_bracket_pos].replace(" ", replacement_string)
+                remaining_text = remaining_text[closing_bracket_pos + 1:].strip()
+            else:
+                tag = ''
+                remaining_text = user_input.strip()
+                break
+        else:
+            tag = None
+            break
+
+    if tag is not None:
+        return tag, remaining_text
+    else:
+        return '', remaining_text

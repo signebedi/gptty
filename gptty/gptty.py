@@ -274,8 +274,8 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         wait_task.cancel()
         print("\b" * 10 , end="", flush=True)
 
-        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0]['messages']['content'].strip()
-        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0]['messages']['content'].strip().replace("\n", " ")
+        response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip()
+        deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip().replace("\n", " ")
 
         if configs['preserve_new_lines']:
             click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")

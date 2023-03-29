@@ -92,7 +92,7 @@ async def chat_async_wrapper(config_path):
   click.echo(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper in your TTY.\nType :help in the chat interface if you need help getting started.{RESET}\n")
   
   if not os.path.exists(config_path):
-      click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
+      click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information. You can get a sample config at <https://github.com/signebedi/gptty/blob/master/assets/gptty.ini.example>.")
       return
 
   # load the app configs

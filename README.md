@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/signebedi/gptty/blob/master/LICENSE) 
 [![PyPI version](https://badge.fury.io/py/gptty.svg)](https://pypi.python.org/pypi/gptty)
-[![Downloads](https://pepy.tech/badge/your-package-name/month)](https://pepy.tech/project/your-package-name)
+[![Downloads](https://static.pepy.tech/badge/gptty)](https://pepy.tech/project/gptty)
 
 ChatGPT wrapper in your TTY
 

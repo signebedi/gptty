@@ -1,0 +1,6 @@
+2023-03-29 17:00:07|Tag1|what is the capital of australia?|The capital of Australia is Canberra.
+2023-03-29 17:00:22|Tag1|when was it founded?|Canberra was founded in 1913 as the site for Australia's capital city.
+2023-03-29 17:02:14|Tag2|Can you help me with this?|Of course.
+
+
+

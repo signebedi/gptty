@@ -12,7 +12,7 @@ gptty is a ChatGPT shell interface that allows you to (1) interact with ChatGPT 
 
 #### Use Cases
 
-Imagine, you are a system admininstrator configuring a web server for your employer. You're accessing the system from a physical interface, with internet connection but no desktop environment or graphical user interface. While configuring the web server, you receive an inexplicable error that you redirect to a file, but don't want to have to jump through hoops to copy it to another system with a browser so you can look up the error. Instead, you install gptty and redirect the error to the chat client with the command `cat app.error | xargs -d '\n' -I {} gptty query --tag error --question "{}"`.
+Imagine, you are a system admininstrator configuring a web server for your employer. You're accessing the system from a physical interface, with internet connection but no desktop environment or graphical user interface. While configuring the web server, you receive an inexplicable error that you redirect to a file, but don't want to have to jump through hoops to copy it to another system with a browser so you can look up the error. Instead, you install gptty and redirect the error to the chat client with commands like `gptty query --tag error --question "$(cat app.error | tr '\n' ' ')"` (which will get rid of line breaks for you) or `cat app.error | xargs -d '\n' -I {} gptty query --tag error --question "{}"` (which presumes that your error spans only a single line).
 
 ![error troubleshooting example](assets/error_troubleshooting_example.png)
 

@@ -2,10 +2,21 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/signebedi/gptty/blob/master/LICENSE) 
 [![PyPI version](https://badge.fury.io/py/gptty.svg)](https://pypi.python.org/pypi/gptty)
+[![Downloads](https://pepy.tech/badge/your-package-name/month)](https://pepy.tech/project/your-package-name)
 
-Chat GPT wrapper in your TTY
+ChatGPT wrapper in your TTY
 
-## Model Support
+## About
+
+gptty is a ChatGPT shell interface that allows you to (1) interact with ChatGPT in a manner similar to the web application, but without needing to rely on the web application's stability; (2) preserve context across chat sessions and structure your conversations however you want; (3) saves local copies of your conversations for easy reference.
+
+#### Use Cases
+
+Imagine, you are a system admininstrator configuring a web server for your employer. You're accessing the system from a physical interface, with internet connection but no desktop environment or graphical user interface. While configuring the web server, you receive an inexplicable error that you redirect to a file, but don't want to have to jump through hoops to copy it to another system with a browser so you can look up the error. Instead, you install gptty and redirect the error to the chat client with the command `cat app.error | xargs -d '\n' -I {} gptty query --tag error --question "{}"`.
+
+![error troubleshooting example](assets/error_troubleshooting_example.png)
+
+#### Model Support
 
 OpenAI makes a number of models available through their API. \[[1](https://platform.openai.com/docs/models/model-endpoint-compatibility)\] Currently, gptty supports `Completions` (davinci, curie) and `ChatCompletions` (gpt-3.5-turbo, gpt-4). All you need to do is specify the model name in your [config](#configuration) (default is text-davinci-003), and the application will handle the rest. 
 

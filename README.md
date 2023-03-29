@@ -69,7 +69,7 @@ You can modify the settings in the configuration file to suit your needs. If a k
 api_key=my_api_key
 ```
 
-This repository provides a sample configuration file `assets/gptty.ini.example` that you can use as a starting point. 
+This repository provides a [sample configuration](https://github.com/signebedi/gptty/blob/master/assets/gptty.ini.example) file `assets/gptty.ini.example` that you can use as a starting point. 
 
 ## Usage
 

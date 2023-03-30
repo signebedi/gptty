@@ -6,6 +6,8 @@ __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
+
+import click
 from textblob import TextBlob
 from collections import Counter, defaultdict
 from nltk.corpus import stopwords
@@ -68,7 +70,7 @@ def get_context(tag: str, max_context_length: int, output_file: str, context_key
         context.append({"role": "user", "content": question})
         
         if debug:
-            print(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
+            click.echo(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
 
 
     else:
@@ -102,6 +104,6 @@ def get_context(tag: str, max_context_length: int, output_file: str, context_key
         context = context.strip() + ' ' + question
         
         if debug:
-            print(f'[debug]\nlength: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
+            click.echo(f'[debug]\nlength: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
 
     return context

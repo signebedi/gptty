@@ -68,15 +68,16 @@ def main():
 
 @click.command()
 @click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
-def chat(config_path):
+@click.option('--verbose', '-v', is_flag=True, help="Show debug data.")
+def chat(config_path:str, verbose:bool):
   
   """
   Run the gptty chat client
   """
 
-  asyncio.run(chat_async_wrapper(config_path))
+  asyncio.run(chat_async_wrapper(config_path, verbose))
 
-async def chat_async_wrapper(config_path):
+async def chat_async_wrapper(config_path:str, verbose:bool):
   title = r"""
                  _   _         
      ____  ____ | | | |        
@@ -89,7 +90,7 @@ async def chat_async_wrapper(config_path):
   """
 
   # Print the text in cyan
-  click.echo(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper in your TTY.\nType :help in the chat interface if you need help getting started.{RESET}\n")
+  click.echo(f"{CYAN}{title}\nWelcome to gptty (v.{__version__}), a ChatGPT wrapper in your TTY.\nType :help in the chat interface if you need help getting started.{' Verbose / Debug mode is on.' if verbose else ''}{RESET}\n")
   
   if not os.path.exists(config_path):
       click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information. You can get a sample config at <https://github.com/signebedi/gptty/blob/master/assets/gptty.ini.example>.")
@@ -104,7 +105,7 @@ async def chat_async_wrapper(config_path):
   # Run the main function
   # create_chat_room(configs=configs, config_path=config_path)
   # asyncio.run(create_chat_room(configs=configs, config_path=config_path))
-  await create_chat_room(configs=configs, config_path=config_path)
+  await create_chat_room(configs=configs, config_path=config_path, verbose=verbose)
 
 
 @click.command()
@@ -113,22 +114,23 @@ async def chat_async_wrapper(config_path):
 @click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
 @click.option('--question', '-q', multiple=True, help='Repeatable list of questions.')
 @click.option('--tag', '-t', default="", help='Tag to categorize your query. [optional]')
-def query(config_path, question, tag):
+@click.option('--verbose', '-v', is_flag=True, help="Show debug data.")
+def query(config_path:str, question:str, tag:str, verbose:bool):
   """
   Submit a gptty query
   """
 
-  asyncio.run(query_async_wrapper(config_path, question, tag))
+  asyncio.run(query_async_wrapper(config_path, question, tag, verbose))
 
 
-async def query_async_wrapper(config_path, question, tag):
+async def query_async_wrapper(config_path, question, tag, verbose):
   # load the app configs
   configs = get_config_data(config_file=config_path)
   
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
 
-  await run_query(questions=question, tag=tag, configs=configs, config_path=config_path)
+  await run_query(questions=question, tag=tag, configs=configs, config_path=config_path, verbose=verbose)
 
 
 @click.command()

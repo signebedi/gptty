@@ -9,13 +9,16 @@ ChatGPT wrapper in your TTY
 
 ## About
 
-gptty is a ChatGPT shell interface that allows you to (1) interact with ChatGPT in a manner similar to the web application, but without needing to rely on the web application's stability; (2) preserve context across chat sessions and structure your conversations however you want; (3) saves local copies of your conversations for easy reference.
+gptty is a ChatGPT shell interface that allows you to (1) interact with ChatGPT in a manner similar to the web application, but without needing to rely on the web application's stability; (2) preserve context across chat sessions and structure your conversations however you want; (3) save local copies of your conversations for easy reference.
 
 #### Use Cases
 
-Imagine, you are a system admininstrator configuring a web server for your employer. You're accessing the system from a physical interface, with internet connection but no desktop environment or graphical user interface. While configuring the web server, you receive an inexplicable error that you redirect to a file, but don't want to have to jump through hoops to copy it to another system with a browser so you can look up the error. Instead, you install gptty and redirect the error to the chat client with commands like `gptty query --tag error --question "$(cat app.error | tr '\n' ' ')"` (which will get rid of line breaks for you) or `cat app.error | xargs -d '\n' -I {} gptty query --tag error --question "{}"` (which presumes that your error spans only a single line).
+Perhaps you are a system admininstrator configuring a web server for your employer. You're accessing the system from a physical interface, with internet connection but no desktop environment or graphical user interface. While configuring the web server, you receive an inexplicable error that you redirect to a file, but don't want to have to jump through hoops to copy it to another system with a browser so you can look up the error. Instead, you install gptty and redirect the error to the chat client with commands like `gptty query --tag error --question "$(cat app.error | tr '\n' ' ')"` (which will get rid of line breaks for you) or `cat app.error | xargs -d '\n' -I {} gptty query --tag error --question "{}"` (which presumes that your error spans only a single line).
 
 ![error troubleshooting example](assets/error_troubleshooting_example.png)
+
+
+Alternatively, you are a software developer or data scientist who wants to route data through ChatGPT, but wants to employ a highly abstract API to make these requests instead of familiarizing yourself intimately with the OpenAI API and its various language-specific wrappers.
 
 #### Model Support
 
@@ -132,6 +135,12 @@ gptty query --config_path /path/to/your/gptty.ini --question "What is the capita
 ```
 
 Remember that gptty uses a configuration file (by default gptty.ini) to store settings like API keys, model configurations, and output file paths. Make sure you have a valid configuration file before running gptty commands.
+
+#### Verbosity
+
+By adding the `--verbose` tag at the end of your chat and query commands, the application will provide additional debug data, including token-counts for each request. This can be useful when you need to track API usage rates.
+
+![verbosity example](assets/verbosity_example.png)
 
 ## Context
 

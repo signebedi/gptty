@@ -1,4 +1,4 @@
-name: gptty tests
+name: Tests
 
 on:
   push:

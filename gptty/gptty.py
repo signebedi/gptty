@@ -25,6 +25,7 @@ from gptty.config import get_config_data
 CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
+YELLOW = "\033[1;33m"
 
 HELP = """
                         [Commands]
@@ -173,7 +174,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
+        fully_contextualized_question = get_context(tag, configs['max_context_length'], configs['output_file'], model_engine, context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 
@@ -263,7 +264,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'],configs['output_file'],context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
+        fully_contextualized_question = get_context(tag, configs['max_context_length'], configs['output_file'], model_engine, context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 

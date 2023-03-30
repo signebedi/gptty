@@ -8,10 +8,21 @@ __email__ = "signe@atreeus.com"
 
 
 import click
+import tiktoken
 from textblob import TextBlob
 from collections import Counter, defaultdict
 from nltk.corpus import stopwords
 
+
+YELLOW = "\033[1;33m"
+RESET = "\033[0m"
+
+
+def get_token_count(s, model_name):
+    """Returns the number of tokens in a text string."""
+    encoding = tiktoken.encoding_for_model(model_name)
+    num_tokens = len(encoding.encode(s))
+    return num_tokens
 
 def return_most_common_phrases(text:str, weight_recent=True) -> list:
 
@@ -47,9 +58,26 @@ def return_most_common_phrases(text:str, weight_recent=True) -> list:
     # Get the most frequent key phrases
     return [phrase for phrase, count in sorted(noun_phrase_weighted_counts.items(), key=lambda x: x[1], reverse=True)]
 
-def get_context(tag: str, max_context_length: int, output_file: str, context_keywords_only: bool = True, model_type: str = None, question: str = None, debug: bool = False) -> str:
+def get_context(tag: str, max_context_length: int, output_file: str, model_name:str, context_keywords_only: bool = True, model_type: str = None, question: str = None, debug: bool = False):
     if len(tag) < 1:
-        return [{"role": "user", "content": question}] if model_type == 'v1/chat/completions' else ""
+        if model_type == 'v1/chat/completions':
+
+            content = [{"role": "user", "content": question}]
+
+            if debug:
+                click.echo(YELLOW + '-' * 25)
+                click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(question, model_name)}\nwords: {len(question.split()) }\ntext: {question}') # debug - print the context to see what it looks like
+                click.echo('-' * 25 + RESET)
+                
+            return content
+
+        else:
+            if debug:
+                click.echo(YELLOW + '-' * 25)
+                click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(question, model_name)}\nwords: {len(question.split())}\ntext: {question}') # debug - print the context to see what it looks like
+                click.echo('-' * 25 + RESET)
+
+            return question
 
     with open(output_file, 'r') as f:
         text = f.read().strip().split('\n')
@@ -70,7 +98,10 @@ def get_context(tag: str, max_context_length: int, output_file: str, context_key
         context.append({"role": "user", "content": question})
         
         if debug:
-            click.echo(f'[debug]\nlength: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
+            token_count = " ".join([x['content'] for x in context])
+            click.echo(YELLOW + '-' * 25)
+            click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(token_count, model_name)}\nwords: {sum(len(item["content"].split()) for item in context)}\ntext: {context}') # debug - print the context to see what it looks like
+            click.echo('-' * 25 + RESET)
 
 
     else:
@@ -104,6 +135,8 @@ def get_context(tag: str, max_context_length: int, output_file: str, context_key
         context = context.strip() + ' ' + question
         
         if debug:
-            click.echo(f'[debug]\nlength: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
+            click.echo(YELLOW + '-' * 25)
+            click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(context, model_name)}\nwords: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like
+            click.echo('-' * 25 + RESET)
 
     return context

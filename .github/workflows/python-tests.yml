@@ -29,5 +29,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e .
 
+    - name: Download NLTK corpora
+      run: |
+        python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('brown')"
+
     - name: Run tests
       run: python -m unittest tests/*.py

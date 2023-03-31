@@ -116,22 +116,23 @@ async def chat_async_wrapper(config_path:str, verbose:bool):
 @click.option('--tag', '-t', default="", help='Tag to categorize your query. [optional]')
 @click.option('--verbose', '-v', is_flag=True, help="Show debug data.")
 @click.option('--json', '-j', is_flag=True, help="Return query as JSON object.")
-def query(config_path:str, question:str, tag:str, verbose:bool, json:bool):
+@click.option('--quiet', is_flag=True, help="Don't write to stdout.")
+def query(config_path:str, question:str, tag:str, verbose:bool, json:bool, quiet:bool):
   """
   Submit a gptty query
   """
 
-  asyncio.run(query_async_wrapper(config_path, question, tag, verbose, json))
+  asyncio.run(query_async_wrapper(config_path, question, tag, verbose, json, quiet))
 
 
-async def query_async_wrapper(config_path:str, question:str, tag:str, verbose:bool, json:bool):
+async def query_async_wrapper(config_path:str, question:str, tag:str, verbose:bool, json:bool, quiet:bool):
   # load the app configs
   configs = get_config_data(config_file=config_path)
   
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
 
-  await run_query(questions=question, tag=tag, configs=configs, config_path=config_path, verbose=verbose, return_json=json)
+  await run_query(questions=question, tag=tag, configs=configs, config_path=config_path, verbose=verbose, return_json=json, quiet=quiet)
 
 
 @click.command()

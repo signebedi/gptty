@@ -207,7 +207,7 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
 
 # this is used when we run the `query` command
-async def run_query(questions:list, tag:str, configs=get_config_data(), log_responses:bool=True, config_path=None, verbose:bool=False, return_json:bool=False):
+async def run_query(questions:list, tag:str, configs=get_config_data(), log_responses:bool=True, config_path=None, verbose:bool=False, return_json:bool=False, quiet:bool=False):
 
     if not os.path.exists(config_path):
         click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
@@ -256,7 +256,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         if len(question) < 1:
             continue
 
-        if not return_json:
+        if not return_json and not quiet:
             # click.echo the question in color
             print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
@@ -270,7 +270,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         # Wait for the response to be completed
         response = await response_task
 
-        if not return_json:
+        if not return_json and not quiet:
             # Cancel the wait graphic task
             wait_task.cancel()
             print("\b" * 10 , end="", flush=True)
@@ -289,7 +289,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
             with open (configs['output_file'], 'a') as f:
                 f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{deformatted_response_text.replace('|','')}\n")
 
-        if return_json:
+        if return_json or quiet:
             json_output.append({
                 'question': question,
                 'response': deformatted_response_text
@@ -298,7 +298,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
             click.echo(response_text_to_print)
 
     # Add this line before the final return statement
-    if return_json:
+    if return_json and not quiet:
         json_response = json.dumps(json_output)
         click.echo(json_response)
         # return json_response

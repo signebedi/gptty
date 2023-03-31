@@ -148,6 +148,11 @@ By adding the `--json` tag at the end of your query commands, the application wi
 
 ![json example](assets/json_example.png)
 
+
+#### Quiet
+
+By adding the `--quiet` tag at the end of your query commands, the application will skip providing any text to stdout, but will still write responses to the `output_file` designated in the application config file.
+
 ## Context
 
 Tagging text for context when using the `chat` and `query` subcommands in this app can help improve the accuracy of the generated responses. Here's how the app handles context with the `chat` subcommand:

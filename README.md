@@ -42,8 +42,7 @@ cd gptty/
 # now install the requirements
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
-pip install -e ./ # install the local package [optional but recommended to run as an executable]
+pip install -e .
 ```
 
 Now, you can verify it is working by running `gptty --help`. If you experience an error, try [configuring](#configuration) the app.
@@ -144,14 +143,13 @@ By adding the `--verbose` tag at the end of your chat and query commands, the ap
 
 #### JSON
 
-By adding the `--json` tag at the end of your query commands, the application will skip providing human readable text to stdout, and instead provide the questions and responses as json objects like `[{question:QUESTION_1, response:RESPONSE_1},{question:QUESTION_1, response:RESPONSE_1},...]`.
+By adding the `--json` tag at the end of your query commands, the application will skip writing human readable text to stdout, and instead write the questions and responses as json objects like `[{"question":QUESTION_1, "response":RESPONSE_1},{"question":QUESTION_1, "response":RESPONSE_1},...]`.
 
 ![json example](assets/json_example.png)
 
-
 #### Quiet
 
-By adding the `--quiet` tag at the end of your query commands, the application will skip providing any text to stdout, but will still write responses to the `output_file` designated in the application config file.
+By adding the `--quiet` tag at the end of your query commands, the application will skip writing anything to stdout, but will still write responses to the `output_file` designated in the application config file.
 
 ## Context
 

@@ -18,7 +18,7 @@ Perhaps you are a system admininstrator configuring a web server for your employ
 ![error troubleshooting example](assets/error_troubleshooting_example.png)
 
 
-Alternatively, you are a software developer or data scientist who wants to route data through ChatGPT, but wants to employ a highly abstract API to make these requests instead of familiarizing yourself intimately with the OpenAI API and its various language-specific wrappers.
+Alternatively, you are a software developer or data scientist who wants to pipe data through ChatGPT, but wants to employ a highly abstract API to make these requests instead of familiarizing yourself intimately with the OpenAI API and its various language-specific wrappers. When you want to update your code base to use a different model, you want to be able to just modify a single [config file](#configuration) and  expect the query response format to remain consistent across various models.  
 
 #### Model Support
 

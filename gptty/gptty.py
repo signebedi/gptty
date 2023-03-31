@@ -6,15 +6,12 @@ __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"
 
-import openai
-import time
-from datetime import datetime
 import click
+import openai
 import pandas as pd
-import os
-import sys
-import asyncio
 from aioconsole import ainput
+from datetime import datetime
+import os, time, sys, asyncio, json
 
 # app specific requirements
 from gptty.tagging import get_tag_from_text
@@ -105,7 +102,7 @@ async def wait_graphic():
             print("\b" * 10, end="", flush=True)
 
 # this is used when we run the `chat` command
-async def create_chat_room(configs=get_config_data(), log_responses=True, config_path=None, verbose=False):
+async def create_chat_room(configs=get_config_data(), log_responses:bool=True, config_path=None, verbose:bool=False):
 
     # Authenticate with OpenAI using your API key
     # click.echo (configs['api_key'])
@@ -210,7 +207,7 @@ async def create_chat_room(configs=get_config_data(), log_responses=True, config
 
 
 # this is used when we run the `query` command
-async def run_query(questions:list, tag:str, configs=get_config_data(), log_responses=True, config_path=None, verbose=False):
+async def run_query(questions:list, tag:str, configs=get_config_data(), log_responses:bool=True, config_path=None, verbose:bool=False, return_json:bool=False):
 
     if not os.path.exists(config_path):
         click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
@@ -240,6 +237,9 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
         return
 
+    # create a json representation of the question / response data FOR THE CURRENT SESSION
+    json_output = []
+
     # Set the parameters for the OpenAI completion API
     model_engine = configs['model'].rstrip('\n')
     temperature = configs['temperature'] # controls the creativity of the response
@@ -256,13 +256,12 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         if len(question) < 1:
             continue
 
+        if not return_json:
+            # click.echo the question in color
+            print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
-        # click.echo the question in color
-        print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
-
-
-        # we create the callable wait_graphic task
-        wait_task = asyncio.create_task(wait_graphic())
+            # we create the callable wait_graphic task
+            wait_task = asyncio.create_task(wait_graphic())
 
         fully_contextualized_question = get_context(tag, configs['max_context_length'], configs['output_file'], model_engine, context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
 
@@ -271,20 +270,36 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
         # Wait for the response to be completed
         response = await response_task
 
-        # Cancel the wait graphic task
-        wait_task.cancel()
-        print("\b" * 10 , end="", flush=True)
+        if not return_json:
+            # Cancel the wait graphic task
+            wait_task.cancel()
+            print("\b" * 10 , end="", flush=True)
 
         response_text = response.choices[0].text.strip() if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip()
         deformatted_response_text = response.choices[0].text.strip().replace("\n", " ") if model_type == 'v1/completions' else response.choices[0]['message']['content'].strip().replace("\n", " ")
 
         if configs['preserve_new_lines']:
-            click.echo(f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n")
+            response_text_to_print = f"\b{RED}[{configs['gpt_name']}] {response_text}{RESET}\n"
         else:
             # click.echo the response in color
-            click.echo(f"\b{RED}[{configs['gpt_name']}] {deformatted_response_text}{RESET}\n")
+            response_text_to_print = f"\b{RED}[{configs['gpt_name']}] {deformatted_response_text}{RESET}\n"
 
         if log_responses:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             with open (configs['output_file'], 'a') as f:
                 f.write(f"{timestamp}|{tag}|{question.replace('|','')}|{deformatted_response_text.replace('|','')}\n")
+
+        if return_json:
+            json_output.append({
+                'question': question,
+                'response': deformatted_response_text
+            })
+        else:
+            click.echo(response_text_to_print)
+
+    # Add this line before the final return statement
+    if return_json:
+        json_response = json.dumps(json_output)
+        click.echo(json_response)
+        # return json_response
+        return

@@ -142,6 +142,12 @@ By adding the `--verbose` tag at the end of your chat and query commands, the ap
 
 ![verbosity example](assets/verbosity_example.png)
 
+#### JSON
+
+By adding the `--json` tag at the end of your query commands, the application will skip providing human readable text to stdout, and instead provide the questions and responses as json objects like `[{question:QUESTION_1, response:RESPONSE_1},{question:QUESTION_1, response:RESPONSE_1},...]`.
+
+![json example](assets/json_example.png)
+
 ## Context
 
 Tagging text for context when using the `chat` and `query` subcommands in this app can help improve the accuracy of the generated responses. Here's how the app handles context with the `chat` subcommand:

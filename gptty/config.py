@@ -24,6 +24,7 @@ def get_config_data(config_file='gptty.ini'):
         'max_context_length': 150,
         'context_keywords_only': True,
         'preserve_new_lines': False,
+        'verify_internet_endpoint': 'google.com',
     }
 
     # read the configuration file (if it exists)
@@ -40,8 +41,9 @@ def get_config_data(config_file='gptty.ini'):
         'max_context_length': config.getint('main', 'max_context_length', fallback=150),
         'context_keywords_only': config.getboolean('main', 'context_keywords_only', fallback=True),
         'preserve_new_lines': config.getboolean('main', 'preserve_new_lines', fallback=False),
-    }
+        'verify_internet_endpoint': config.get('main', 'verify_internet_endpoint', fallback='google.com'),
+	}
 
-    
+   
 
     return parsed_data

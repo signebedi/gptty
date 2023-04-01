@@ -18,6 +18,8 @@ import os
 import asyncio
 import pandas as pd
 import nltk
+import socket
+from contextlib import closing
 
 # app specific requirements
 from gptty.config import get_config_data
@@ -51,6 +53,24 @@ def return_log_as_df(configs):
         df = pd.DataFrame(columns=['timestamp','tag','question','response'])
     return df
 
+# Check if the system has a valid internet connection
+
+def has_internet_connection(host="google.com", port=443, timeout=3):
+    """Check if the system has a valid internet connection.
+
+    Args:
+        host (str, optional): A well-known website to test the connection. Default is 'www.google.com'.
+        port (int, optional): The port number to use for the connection. Default is 80.
+        timeout (int, optional): The time in seconds to wait for a response before giving up. Default is 3.
+
+    Returns:
+        bool: True if the system has an internet connection, False otherwise.
+    """
+    try:
+        with closing(socket.create_connection((host, port), timeout=timeout)):
+            return True
+    except OSError:
+        return False
 
 # borrowed version callback from https://click.palletsprojects.com/en/7.x/options/#callbacks-and-eager-options
 def print_version(ctx, param, value, version=__version__):
@@ -98,7 +118,12 @@ async def chat_async_wrapper(config_path:str, verbose:bool):
 
   # load the app configs
   configs = get_config_data(config_file=config_path)
-  
+
+  # Here, we verify that we have a wifi connection and if not, exit
+  if not has_internet_connection(configs['verify_internet_endpoint']):
+    click.echo(f"{RED}FAILED to verify connection at {configs['verify_internet_endpoint']}. Are you sure you are connected to the internet?")
+    return
+
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
   
@@ -128,7 +153,11 @@ def query(config_path:str, question:str, tag:str, verbose:bool, json:bool, quiet
 async def query_async_wrapper(config_path:str, question:str, tag:str, verbose:bool, json:bool, quiet:bool):
   # load the app configs
   configs = get_config_data(config_file=config_path)
-  
+
+  # Here, we verify that we have a wifi connection and if not, exit
+  if not has_internet_connection(configs['verify_internet_endpoint']):
+    click.echo(f"{RED}FAILED to verify connection at {configs['verify_internet_endpoint']}. Are you sure you are connected to the internet?")
+    return
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
 

@@ -20,6 +20,8 @@ Perhaps you are a system admininstrator configuring a web server for your employ
 
 Alternatively, you are a software developer or data scientist who wants to pipe data through ChatGPT, but wants to employ a highly abstract API to make these requests instead of familiarizing yourself intimately with the OpenAI API and its various language-specific wrappers. When you want to update your code base to use a different model, you want to be able to just modify a single [config file](#configuration) and  expect the query response format to remain consistent across various models.  
 
+Or maybe you are an enthusiast who wants to keep local copies of their conversations, or wants to exert more direct control over the categorization methods you employ for these conversations.
+
 #### Model Support
 
 OpenAI makes a number of models available through their API. \[[1](https://platform.openai.com/docs/models/model-endpoint-compatibility)\] Currently, gptty supports `Completions` (davinci, curie) and `ChatCompletions` (gpt-3.5-turbo, gpt-4). All you need to do is specify the model name in your [config](#configuration) (default is text-davinci-003), and the application will handle the rest. 

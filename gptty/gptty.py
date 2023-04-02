@@ -17,6 +17,7 @@ import os, time, sys, asyncio, json
 from prompt_toolkit import PromptSession
 from prompt_toolkit.formatted_text import ANSI
 from prompt_toolkit.styles import Style
+from prompt_toolkit.patch_stdout import patch_stdout
 
 # app specific requirements
 from gptty.tagging import get_tag_from_text
@@ -28,6 +29,9 @@ CYAN = "\033[1;36m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 YELLOW = "\033[1;33m"
+GREY = "\033[90m"
+ERASE_LINE = "\033[K"
+MOVE_CURSOR_UP = "\033[F"
 
 HELP = """
                         [Commands]
@@ -149,7 +153,11 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
         # Get user input
         try:
-            i = await session.prompt_async(ANSI(f"{CYAN}> "), style=Style.from_dict({'': 'ansicyan'}))
+
+            with patch_stdout():
+                i = await session.prompt_async(ANSI(f"{CYAN}> "), style=Style.from_dict({'': 'ansicyan'}))
+            print(f"{ERASE_LINE}{MOVE_CURSOR_UP}{GREY}> {i}\n", end="")
+
             # i = await ainput(f"{CYAN}> ")
             tag,question = get_tag_from_text(i)
             prompt_length = len(question)

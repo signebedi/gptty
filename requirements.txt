@@ -3,5 +3,6 @@ click<9.0.0
 nltk<4.0.0
 openai==0.27.2
 pandas<2.0.0
+prompt-toolkit<4.0.0
 textblob<1.0.0
 tiktoken<1.0.0

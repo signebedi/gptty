@@ -12,6 +12,8 @@ import pandas as pd
 from aioconsole import ainput
 from datetime import datetime
 import os, time, sys, asyncio, json
+from prompt_toolkit import PromptSession
+from prompt_toolkit.formatted_text import ANSI
 
 # app specific requirements
 from gptty.tagging import get_tag_from_text
@@ -119,6 +121,7 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
         df = pd.DataFrame(columns=['timestamp','tag','question','response'])
 
     try:
+
         openai.api_key = configs['api_key'].rstrip('\n')
     except:
         click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
@@ -136,10 +139,14 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
         click.echo(f"{RED}FAILED to validate the model name '{model_engine}'. Are you sure this is a valid OpenAI model? Check the available models at <https://platform.openai.com/docs/models/overview> and try again.{RESET}")
         return
 
+    session = PromptSession()
+
     # Continuously send and receive messages
     while True:
         # Get user input
-        i = await ainput(f"{CYAN}> ")
+        i = await session.prompt_async(ANSI(f"{CYAN}> {RESET}"))
+
+        # i = await ainput(f"{CYAN}> ")
         tag,question = get_tag_from_text(i)
         prompt_length = len(question)
 

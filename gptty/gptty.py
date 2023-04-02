@@ -12,8 +12,11 @@ import pandas as pd
 from aioconsole import ainput
 from datetime import datetime
 import os, time, sys, asyncio, json
+
+# prompt toolkit requirements
 from prompt_toolkit import PromptSession
 from prompt_toolkit.formatted_text import ANSI
+from prompt_toolkit.styles import Style
 
 # app specific requirements
 from gptty.tagging import get_tag_from_text
@@ -146,7 +149,7 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
         # Get user input
         try:
-            i = await session.prompt_async(ANSI(f"{CYAN}> "))
+            i = await session.prompt_async(ANSI(f"{CYAN}> "), style=Style.from_dict({'': 'ansicyan'}))
             # i = await ainput(f"{CYAN}> ")
             tag,question = get_tag_from_text(i)
             prompt_length = len(question)
@@ -180,7 +183,7 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
 
         # click.echo the question in color
-        print(f"{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
+        print(f"\n{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)
 
         # we create the callable wait_graphic task
         wait_task = asyncio.create_task(wait_graphic())

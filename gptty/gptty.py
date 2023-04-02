@@ -164,12 +164,9 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
         # handle keyboard interrupt
         except KeyboardInterrupt:
-            i = None
+            i = False
 
-        if not i:
-            continue
-        elif prompt_length < 1:
-            click.echo('\nPlease provide an actual prompt.\n')
+        if i == False:
             continue
         elif i.strip() in [':help',':h']:
             click.echo(HELP)
@@ -185,10 +182,9 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
             # c = f'{"|".join(f"{row[]}" for index,row in df.iterrows())}'.replace('|','\n')
             click.echo (f'\n{df}\n')
             continue
-        elif i.strip().startswith(':'):
-            click.echo('\nPlease provide a valid command.\n')
+        elif i.strip().startswith(':') or prompt_length < 1:
+            click.echo('\nPlease provide a valid command or prompt.\n')
             continue
-
 
         # click.echo the question in color
         print(f"\n{CYAN}[{configs['your_name']}] {question}{RESET} \n", end="", flush=True)

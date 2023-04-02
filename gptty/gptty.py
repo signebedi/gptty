@@ -143,14 +143,21 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
     # Continuously send and receive messages
     while True:
+
         # Get user input
-        i = await session.prompt_async(ANSI(f"{CYAN}> {RESET}"))
+        try:
+            i = await session.prompt_async(ANSI(f"{CYAN}> "))
+            # i = await ainput(f"{CYAN}> ")
+            tag,question = get_tag_from_text(i)
+            prompt_length = len(question)
 
-        # i = await ainput(f"{CYAN}> ")
-        tag,question = get_tag_from_text(i)
-        prompt_length = len(question)
+        # handle keyboard interrupt
+        except KeyboardInterrupt:
+            i = None
 
-        if prompt_length < 1:
+        if not i:
+            continue
+        elif prompt_length < 1:
             click.echo('\nPlease provide an actual prompt.\n')
             continue
         elif i.strip() in [':help',':h']:

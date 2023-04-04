@@ -42,5 +42,57 @@ class TestContext(unittest.TestCase):
         self.assertLessEqual(sum(len(item["content"].split()) for item in result), 50)
 
 
+    def test_get_context_no_tag(self):
+        max_context_length = 50
+        question = 'What is the population of Australia?'
+        model_name = 'gpt-3'
+        additional_context = 'Australia is a country in the Southern Hemisphere.'
+
+        # Test for 'v1/chat/completions' model type
+        model_type = 'v1/chat/completions'
+        expected_context = [
+            {'role': 'system', 'content': additional_context},
+            {'role': 'user', 'content': question},
+        ]
+
+        result = get_context('', max_context_length, None, model_name, additional_context=additional_context, model_type=model_type, question=question)
+        self.assertEqual(result, expected_context)
+        self.assertLessEqual(sum(len(item["content"].split()) for item in result), 50)
+
+
+    def test_get_context_no_tag_v1_chat_completions(self):
+        max_context_length = 50
+        question = 'What is the capital of Australia?'
+        model_name = 'gpt-3'
+        additional_context = ("I am doing an important research project on the capitals cities of Oceania, "
+                              "and need help identifying the important aspects of each. This project is being "
+                              "completed for Mr. Anderson's sixth grade history course, and so I also need help "
+                              "writing each response as if it is part of a longer essay that we need to write "
+                              "called Capitals of the World.")
+        model_type = 'v1/chat/completions'
+
+        result = get_context('', max_context_length, None, model_name, additional_context=additional_context, model_type=model_type, question=question)
+        self.assertTrue(isinstance(result, list))
+        self.assertTrue({'role': 'user', 'content': question} in result)
+        self.assertLessEqual(len(question.split()), 50)
+
+
+    def test_get_context_no_tag_other_model_types(self):
+        max_context_length = 50
+        question = 'What is the capital of Australia?'
+        model_name = 'gpt-3'
+        additional_context = ("I am doing an important research project on the capitals cities of Oceania, "
+                              "and need help identifying the important aspects of each. This project is being "
+                              "completed for Mr. Anderson's sixth grade history course, and so I also need help "
+                              "writing each response as if it is part of a longer essay that we need to write "
+                              "called Capitals of the World.")
+        model_type = None
+
+        result = get_context('', max_context_length, None, model_name, additional_context=additional_context, model_type=model_type, question=question)
+        self.assertTrue(isinstance(result, str))
+        self.assertTrue(question in result)
+        self.assertLessEqual(len(result.split()), 50)
+
+
 if __name__ == '__main__':
     unittest.main()

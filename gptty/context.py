@@ -17,6 +17,12 @@ from nltk.corpus import stopwords
 YELLOW = "\033[1;33m"
 RESET = "\033[0m"
 
+def verify_added_phrase(phrase:str,context:str, max_len:int) -> bool:
+
+    if len(context) + len(phrase) <= max_len:
+        return True
+
+    return False
 
 def get_token_count(s, model_name):
     """Returns the number of tokens in a text string."""
@@ -63,7 +69,7 @@ def get_context(tag: str,
                 output_file: str, 
                 model_name:str, 
                 context_keywords_only: bool = True, 
-                additional_context: str = None,
+                additional_context: str = "",
                 model_type: str = None, 
                 question: str = None, 
                 debug: bool = False):
@@ -71,16 +77,31 @@ def get_context(tag: str,
     if len(tag) < 1:
         if model_type == 'v1/chat/completions':
 
-            content = [{"role": "user", "content": question}]
+            context = [{"role": "user", "content": question}]
+
+            if len(additional_context) > 0:
+                # at this point we've added all the elements to context that we believe we should, so let's add any 
+                # additional context that we passed.
+                remaining_tokens = max_context_length - len(question)
+                context = [{"role": "system", "content": ' '.join(additional_context.split()[:remaining_tokens])}] + context
+
 
             if debug:
                 click.echo(YELLOW + '-' * 25)
                 click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(question, model_name)}\nwords: {len(question.split()) }\ntext: {question}') # debug - print the context to see what it looks like
                 click.echo('-' * 25 + RESET)
                 
-            return content
+            return context
 
         else:
+
+            if len(additional_context) > 0:
+
+                remaining_tokens = max_context_length - (len(question.split()))
+                if remaining_tokens > 0:
+                    question = ' '.join(additional_context.split()[:remaining_tokens]) + question
+
+
             if debug:
                 click.echo(YELLOW + '-' * 25)
                 click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(question, model_name)}\nwords: {len(question.split())}\ntext: {question}') # debug - print the context to see what it looks like
@@ -106,6 +127,12 @@ def get_context(tag: str,
 
         context.append({"role": "user", "content": question})
         
+        if len(additional_context) > 0:
+            # at this point we've added all the elements to context that we believe we should, so let's add any 
+            # additional context that we passed.
+            remaining_tokens = max_context_length - (sum(len(item["content"].split()) for item in context))
+            context = [{"role": "system", "content": ' '.join(additional_context.split()[:remaining_tokens])}] + context
+
         if debug:
             token_count = " ".join([x['content'] for x in context])
             click.echo(YELLOW + '-' * 25)
@@ -122,8 +149,8 @@ def get_context(tag: str,
                 context += ' ' + data[2] + ' ' + data[3]
 
         if context_keywords_only:
-            phrases = return_most_common_phrases(context)
-            context = ""
+            phrases = return_most_common_phrases(additional_context+context) # here we prepend the context with the additional_context string
+            context = "" # maybe not the cleanest way to do this, but we are resetting the context here
 
             for phrase in phrases:
                 if (len(context.split()) + len(phrase.split()) + len(question.split())) > max_context_length:
@@ -141,8 +168,18 @@ def get_context(tag: str,
 
             context = c.strip()
 
+            # prepend `context` with `additional_context` if we have any tokens remaining.
+            # WARNING - this may create unexpected behavior, especially if a question is 
+            # contained within the additional context passed, that may provide seemingly 
+            # inexplicable responses.
+            remaining_tokens = max_context_length - (len(context.split()) + len(question.split()))
+            if remaining_tokens > 0:
+                context = ' '.join(additional_context.split()[:remaining_tokens]) + context
+
+
         context = context.strip() + ' ' + question
         
+
         if debug:
             click.echo(YELLOW + '-' * 25)
             click.echo(f'[debug]\nmodel: {model_name}\ntokens: {get_token_count(context, model_name)}\nwords: {len(context.split())}\ntext: {context}') # debug - print the context to see what it looks like

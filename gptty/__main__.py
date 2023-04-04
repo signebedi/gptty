@@ -137,20 +137,21 @@ async def chat_async_wrapper(config_path:str, verbose:bool):
 # @click.option('--log', '-l', is_flag=True, callback=print_version,
 #               expose_value=False, is_eager=True, help="Show question log.")
 @click.option('--config_path', '-c', default=os.path.join(os.getcwd(),'gptty.ini'), help="Path to config file.")
+@click.option('--additional_context', '-a', default="", help="Pass more context to your questions.")
 @click.option('--question', '-q', multiple=True, help='Repeatable list of questions.')
 @click.option('--tag', '-t', default="", help='Tag to categorize your query. [optional]')
 @click.option('--verbose', '-v', is_flag=True, help="Show debug data.")
 @click.option('--json', '-j', is_flag=True, help="Return query as JSON object.")
 @click.option('--quiet', is_flag=True, help="Don't write to stdout.")
-def query(config_path:str, question:str, tag:str, verbose:bool, json:bool, quiet:bool):
+def query(config_path:str, additional_context:str, question:str, tag:str, verbose:bool, json:bool, quiet:bool):
   """
   Submit a gptty query
   """
 
-  asyncio.run(query_async_wrapper(config_path, question, tag, verbose, json, quiet))
+  asyncio.run(query_async_wrapper(config_path, question, tag, additional_context, verbose, json, quiet))
 
 
-async def query_async_wrapper(config_path:str, question:str, tag:str, verbose:bool, json:bool, quiet:bool):
+async def query_async_wrapper(config_path:str, question:str, tag:str, additional_context:str, verbose:bool, json:bool, quiet:bool):
   # load the app configs
   configs = get_config_data(config_file=config_path)
 
@@ -161,7 +162,7 @@ async def query_async_wrapper(config_path:str, question:str, tag:str, verbose:bo
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
 
-  await run_query(questions=question, tag=tag, configs=configs, config_path=config_path, verbose=verbose, return_json=json, quiet=quiet)
+  await run_query(questions=question, tag=tag, configs=configs, additional_context=additional_context, config_path=config_path, verbose=verbose, return_json=json, quiet=quiet)
 
 
 @click.command()

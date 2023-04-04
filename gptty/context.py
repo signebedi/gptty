@@ -74,6 +74,8 @@ def get_context(tag: str,
                 question: str = None, 
                 debug: bool = False):
 
+    # additional_context = additional_context.replace("\n",'')
+
     if len(tag) < 1:
         if model_type == 'v1/chat/completions':
 
@@ -99,7 +101,7 @@ def get_context(tag: str,
 
                 remaining_tokens = max_context_length - (len(question.split()))
                 if remaining_tokens > 0:
-                    question = ' '.join(additional_context.split()[:remaining_tokens]) + question
+                    question = ' '.join(additional_context.split()[:remaining_tokens]) + " " + question
 
 
             if debug:
@@ -174,7 +176,7 @@ def get_context(tag: str,
             # inexplicable responses.
             remaining_tokens = max_context_length - (len(context.split()) + len(question.split()))
             if remaining_tokens > 0:
-                context = ' '.join(additional_context.split()[:remaining_tokens]) + context
+                context = ' '.join(additional_context.split()[:remaining_tokens]) + " " + context
 
 
         context = context.strip() + ' ' + question

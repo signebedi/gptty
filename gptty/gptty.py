@@ -228,7 +228,7 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
 
 
 # this is used when we run the `query` command
-async def run_query(questions:list, tag:str, configs=get_config_data(), log_responses:bool=True, config_path=None, verbose:bool=False, return_json:bool=False, quiet:bool=False):
+async def run_query(questions:list, tag:str, configs=get_config_data(), additional_context:str="", log_responses:bool=True, config_path=None, verbose:bool=False, return_json:bool=False, quiet:bool=False):
 
     if not os.path.exists(config_path):
         click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
@@ -284,7 +284,7 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), log_resp
             # we create the callable wait_graphic task
             wait_task = asyncio.create_task(wait_graphic())
 
-        fully_contextualized_question = get_context(tag, configs['max_context_length'], configs['output_file'], model_engine, context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
+        fully_contextualized_question = get_context(tag, configs['max_context_length'], configs['output_file'], model_engine, additional_context=additional_context, context_keywords_only=configs['context_keywords_only'], model_type=model_type, question=question, debug=verbose)
 
         response_task = asyncio.create_task(fetch_response(fully_contextualized_question, model_engine, max_tokens, temperature, model_type))
 

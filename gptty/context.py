@@ -58,7 +58,16 @@ def return_most_common_phrases(text:str, weight_recent=True) -> list:
     # Get the most frequent key phrases
     return [phrase for phrase, count in sorted(noun_phrase_weighted_counts.items(), key=lambda x: x[1], reverse=True)]
 
-def get_context(tag: str, max_context_length: int, output_file: str, model_name:str, context_keywords_only: bool = True, model_type: str = None, question: str = None, debug: bool = False):
+def get_context(tag: str, 
+                max_context_length: int, 
+                output_file: str, 
+                model_name:str, 
+                context_keywords_only: bool = True, 
+                additional_context: str = None,
+                model_type: str = None, 
+                question: str = None, 
+                debug: bool = False):
+
     if len(tag) < 1:
         if model_type == 'v1/chat/completions':
 
@@ -88,7 +97,7 @@ def get_context(tag: str, max_context_length: int, output_file: str, model_name:
         for row in reversed(text):
             data = [item.strip() for item in row.split('|')]
 
-            if (sum(len(item["content"].split()) for item in context) + len(data[2].split()) + len(data[3].split())) > max_context_length:
+            if (sum(len(item["content"].split()) for item in context) + len(data[2].split()) + len(data[3].split()) + len(question.split())) > max_context_length:
                 break
 
             if data[1] == tag:
@@ -117,7 +126,7 @@ def get_context(tag: str, max_context_length: int, output_file: str, model_name:
             context = ""
 
             for phrase in phrases:
-                if len(context.split()) > (max_context_length - len(phrase.split())):
+                if (len(context.split()) + len(phrase.split()) + len(question.split())) > max_context_length:
                     break
                 context += " " + phrase
 
@@ -126,7 +135,7 @@ def get_context(tag: str, max_context_length: int, output_file: str, model_name:
             context_words = context.split()
 
             for i in range(len(context_words)):
-                if len(c.split()) >= max_context_length:
+                if (len(c.split()) + len(question.split())) >= max_context_length:
                     break
                 c += ' ' + context_words[i]
 

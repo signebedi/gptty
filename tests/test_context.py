@@ -18,7 +18,25 @@ class TestContext(unittest.TestCase):
         expected = "what is the capital of australia? The capital of Australia is Canberra. when was it founded? Canberra was founded in 1913 as the site for Australia's capital city. Who is its mayor?"
         self.assertEqual(result.strip(), expected.strip())
 
-    # Placeholder - tests when model_type == 'v1/chat/completions'
+    def test_get_context_v1_chat_completions(self):
+        test_data_file = 'tests/test_context_data.txt'
+        tag = 'Tag1'
+        question = 'What is the population of Australia?'
+        model_name = 'gpt-3'
+        max_context_length = 50
+        model_type = 'v1/chat/completions'
+
+        expected_context = [
+            {'role': 'user', 'content': 'what is the capital of australia?'},
+            {'role': 'assistant', 'content': 'The capital of Australia is Canberra.'},
+            {'role': 'user', 'content': 'when was it founded?'},
+            {'role': 'assistant', 'content': "Canberra was founded in 1913 as the site for Australia's capital city."},
+            {'role': 'user', 'content': question},
+        ]
+
+        result = get_context(tag, max_context_length, test_data_file, model_name, model_type=model_type, question=question)
+        self.assertEqual(result, expected_context)
+
 
 if __name__ == '__main__':
     unittest.main()

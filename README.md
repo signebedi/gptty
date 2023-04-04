@@ -144,6 +144,10 @@ By adding the `--verbose` tag at the end of your chat and query commands, the ap
 
 ![verbosity example](assets/verbosity_example.png)
 
+#### Additional Context
+
+By adding the `--additional_context [some_string_here]` option to your query commands, the application will add any string you pass as further, outside context for your question.
+
 #### JSON
 
 By adding the `--json` tag at the end of your query commands, the application will skip writing human readable text to stdout, and instead write the questions and responses as json objects like `[{"question":QUESTION_1, "response":RESPONSE_1},{"question":QUESTION_1, "response":RESPONSE_1},...]`.

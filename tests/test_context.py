@@ -12,11 +12,14 @@ class TestContext(unittest.TestCase):
         result = get_context("Tag1", 50, "tests/test_context_data.txt", "text-davinci-003", context_keywords_only=True, question="Who is its mayor?")
         expected = "australia canberra 's capital city Who is its mayor?"
         self.assertEqual(result.strip(), expected.strip())
+        self.assertLessEqual(len(result.split()), 50)
+
 
     def test_get_context_no_keywords(self):
         result = get_context("Tag1", 50, "tests/test_context_data.txt", "text-davinci-003", context_keywords_only=False, question="Who is its mayor?")
         expected = "what is the capital of australia? The capital of Australia is Canberra. when was it founded? Canberra was founded in 1913 as the site for Australia's capital city. Who is its mayor?"
         self.assertEqual(result.strip(), expected.strip())
+        self.assertLessEqual(len(result.split()), 50)
 
     def test_get_context_v1_chat_completions(self):
         test_data_file = 'tests/test_context_data.txt'
@@ -36,6 +39,7 @@ class TestContext(unittest.TestCase):
 
         result = get_context(tag, max_context_length, test_data_file, model_name, model_type=model_type, question=question)
         self.assertEqual(result, expected_context)
+        self.assertLessEqual(sum(len(item["content"].split()) for item in result), 50)
 
 
 if __name__ == '__main__':

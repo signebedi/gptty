@@ -1,9 +1,9 @@
 # gptty
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/signebedi/gptty/blob/master/LICENSE) 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/signebedi/gptty/blob/master/LICENSE) 
 [![PyPI version](https://badge.fury.io/py/gptty.svg)](https://pypi.python.org/pypi/gptty)
 [![Downloads](https://static.pepy.tech/badge/gptty)](https://pepy.tech/project/gptty)
-[![gptty tests](https://github.com/signebedi/gptty/workflows/Tests/badge.svg)](https://github.com/signebedi/gptty/actions)
+[![gptty tests](https://github.com/signebedi/gptty/workflows/tests/badge.svg)](https://github.com/signebedi/gptty/actions)
 
 ChatGPT wrapper in your TTY
 

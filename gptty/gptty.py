@@ -49,13 +49,19 @@ HELP = """
 
 def usage_stats_today():
 
-    r = openai.api_requestor.APIRequestor()
-    resp = r.request("GET", f'/usage?date={datetime.now().strftime("%Y-%m-%d")}')
-    resp_object = resp[0].data
+    try:
+        r = openai.api_requestor.APIRequestor()
+        resp = r.request("GET", f'/usage?date={datetime.now().strftime("%Y-%m-%d")}')
+        resp_object = resp[0].data
+    except:
+        return None
+    # requests_today = resp_object['data'][0]['n_requests'] # num requests
+    # query_tokens_today = resp_object['data'][0]['n_context_tokens_total'] # query tokens
+    # response_tokens_today = resp_object['data'][0]['n_generated_tokens_total'] # response tokens
 
-    requests_today = resp_object['data'][0]['n_requests'] # num requests
-    query_tokens_today = resp_object['data'][0]['n_context_tokens_total'] # query tokens
-    response_tokens_today = resp_object['data'][0]['n_generated_tokens_total'] # response tokens
+    requests_today = sum(item["n_requests"] for item in resp_object['data'])
+    query_tokens_today = sum(item["n_context_tokens_total"] for item in resp_object['data'])
+    response_tokens_today = sum(item["n_generated_tokens_total"] for item in resp_object['data'])
 
     return requests_today, query_tokens_today, response_tokens_today
 
@@ -235,11 +241,10 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
         # Get user input
         try:
 
-            usage = usage_stats_today() if verbose else ""
 
             with patch_stdout():
-                i = await session.prompt_async(ANSI(f"{CYAN}{usage}> "), style=Style.from_dict({'': 'ansicyan'}))
-            print(f"{ERASE_LINE}{MOVE_CURSOR_UP}{GREY}{usage}> {i}\n", end="")
+                i = await session.prompt_async(ANSI(f"{CYAN}{usage_stats_today() if verbose else ''}> "), style=Style.from_dict({'': 'ansicyan'}))
+            print(f"{ERASE_LINE}{MOVE_CURSOR_UP}{GREY}{usage_stats_today() if verbose else ''}> {i}\n", end="")
 
             # i = await ainput(f"{CYAN}> ")
             tag,question = get_tag_from_text(i)

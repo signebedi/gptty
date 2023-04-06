@@ -127,6 +127,12 @@ async def chat_async_wrapper(config_path:str, verbose:bool):
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
   
+  # Authenticate with OpenAI using your API key
+  # click.echo (configs['api_key'])
+  if configs['api_key'].rstrip('\n') == "":
+      click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
+      return
+
   # Run the main function
   # create_chat_room(configs=configs, config_path=config_path)
   # asyncio.run(create_chat_room(configs=configs, config_path=config_path))
@@ -152,6 +158,11 @@ def query(config_path:str, additional_context:str, question:str, tag:str, verbos
 
 
 async def query_async_wrapper(config_path:str, question:str, tag:str, additional_context:str, verbose:bool, json:bool, quiet:bool):
+
+  if not os.path.exists(config_path):
+      click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
+      return
+
   # load the app configs
   configs = get_config_data(config_file=config_path)
 
@@ -159,8 +170,19 @@ async def query_async_wrapper(config_path:str, question:str, tag:str, additional
   if not has_internet_connection(configs['verify_internet_endpoint']):
     click.echo(f"{RED}FAILED to verify connection at {configs['verify_internet_endpoint']}. Are you sure you are connected to the internet?")
     return
+
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
+
+  # Authenticate with OpenAI using your API key
+  # click.echo (configs['api_key'])
+  if configs['api_key'].rstrip('\n') == "":
+      click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
+      return
+
+  if len(questions) < 1 or not isinstance(questions, tuple):
+      click.echo(f"{RED}FAILED to query ChatGPT. Did you forget to ask a question? Run `gptty chat --help` for more information.")
+      return
 
   await run_query(questions=question, tag=tag, configs=configs, additional_context=additional_context, config_path=config_path, verbose=verbose, return_json=json, quiet=quiet)
 
@@ -176,6 +198,11 @@ def log(config_path):
   
   # create the output file if it doesn't exist
   with open (configs['output_file'], 'a'): pass
+
+  if not os.path.exists(config_path):
+      click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
+      return
+
 
   df = return_log_as_df(configs)
 

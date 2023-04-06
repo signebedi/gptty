@@ -46,6 +46,19 @@ HELP = """
 `[a:b] what is the meaning of life`         -   pass context positionally
 """
 
+
+def usage_stats_today():
+
+    r = openai.api_requestor.APIRequestor()
+    resp = r.request("GET", f'/usage?date={datetime.now().strftime("%Y-%m-%d")}')
+    resp_object = resp[0].data
+
+    requests_today = resp_object['data'][0]['n_requests'] # num requests
+    query_tokens_today = resp_object['data'][0]['n_context_tokens_total'] # query tokens
+    response_tokens_today = resp_object['data'][0]['n_generated_tokens_total'] # response tokens
+
+    return requests_today, query_tokens_today, response_tokens_today
+
 ## VALIDATE MODELS - these functions are use to validate the model passed by the user and raises an exception if 
 ## the model does not exist.
 def get_available_models():
@@ -187,11 +200,6 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
     - None
     """
 
-    # Authenticate with OpenAI using your API key
-    # click.echo (configs['api_key'])
-    if configs['api_key'].rstrip('\n') == "":
-        click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
-        return
 
     # here we add a pandas df reference object, see 
     # https://github.com/signebedi/gptty/issues/15
@@ -202,7 +210,6 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
         df = pd.DataFrame(columns=['timestamp','tag','question','response'])
 
     try:
-
         openai.api_key = configs['api_key'].rstrip('\n')
     except:
         click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
@@ -228,9 +235,11 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
         # Get user input
         try:
 
+            usage = usage_stats_today() if verbose else ""
+
             with patch_stdout():
-                i = await session.prompt_async(ANSI(f"{CYAN}> "), style=Style.from_dict({'': 'ansicyan'}))
-            print(f"{ERASE_LINE}{MOVE_CURSOR_UP}{GREY}> {i}\n", end="")
+                i = await session.prompt_async(ANSI(f"{CYAN}{usage}> "), style=Style.from_dict({'': 'ansicyan'}))
+            print(f"{ERASE_LINE}{MOVE_CURSOR_UP}{GREY}{usage}> {i}\n", end="")
 
             # i = await ainput(f"{CYAN}> ")
             tag,question = get_tag_from_text(i)
@@ -330,19 +339,6 @@ async def run_query(questions:list, tag:str, configs=get_config_data(), addition
         if return_json is False and quiet is True, returns None
     """
 
-    if not os.path.exists(config_path):
-        click.echo(f"{RED}FAILED to access app config file at {config_path}. Are you sure this is a valid config file? Run `gptty chat --help` for more information.")
-        return
-
-    # Authenticate with OpenAI using your API key
-    # click.echo (configs['api_key'])
-    if configs['api_key'].rstrip('\n') == "":
-        click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
-        return
-
-    if len(questions) < 1 or not isinstance(questions, tuple):
-        click.echo(f"{RED}FAILED to query ChatGPT. Did you forget to ask a question? Run `gptty chat --help` for more information.")
-        return
 
     # here we add a pandas df reference object, see 
     # https://github.com/signebedi/gptty/issues/15

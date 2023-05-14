@@ -216,6 +216,7 @@ async def create_chat_room(configs=get_config_data(), log_responses:bool=True, c
         df = pd.DataFrame(columns=['timestamp','tag','question','response'])
 
     try:
+        openai.organization = configs['org_id'].rstrip('\n')
         openai.api_key = configs['api_key'].rstrip('\n')
     except:
         click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")

@@ -1,5 +1,6 @@
 [main]
 api_key=SOME_KEY_HERE
+org_id=org-ADD_YOUR_ORG_ID
 your_name=question
 gpt_name=response
 output_file=output.txt

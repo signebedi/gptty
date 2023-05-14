@@ -39,6 +39,7 @@ def get_config_data(config_file='gptty.ini'):
 
     config['DEFAULT'] = {
         'api_key': "",
+        'org_id': "",
         'your_name': 'question',
         'gpt_name': 'response',
         'output_file': 'output.txt',
@@ -56,6 +57,7 @@ def get_config_data(config_file='gptty.ini'):
 
     parsed_data = {
         'api_key': config.get('main', 'api_key', fallback="",),
+        'org_id': config.get('main', 'org_id', fallback="",),
         'your_name': config.get('main', 'your_name', fallback='question'),
         'gpt_name': config.get('main', 'gpt_name', fallback='response'),
         'output_file': config.get('main', 'output_file', fallback='output.txt'),

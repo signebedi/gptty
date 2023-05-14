@@ -22,7 +22,7 @@ class TestConfig(unittest.TestCase):
     def test_custom_config(self):
         custom_config_data = get_config_data(config_file='tests/test_gptty.ini')
         self.assertEqual(custom_config_data['api_key'], "ANOTHER_KEY_HERE")
-        self.assertEqual(default_config_data['org_id'], "org-536JCU1SlmsQZB0i734dCsGC")
+        self.assertEqual(custom_config_data['org_id'], "org-536JCU1SlmsQZB0i734dCsGC")
         self.assertEqual(custom_config_data['your_name'], 'custom_question')
         self.assertEqual(custom_config_data['gpt_name'], 'custom_response')
         self.assertEqual(custom_config_data['output_file'], 'custom_output.txt')

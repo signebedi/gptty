@@ -2,7 +2,7 @@
 __name__ = "gptty.tagging"
 __author__ = "Sig Janoska-Bedi"
 __credits__ = ["Sig Janoska-Bedi"]
-__version__ = "0.2.5"
+__version__ = "0.2.6"
 __license__ = "MIT"
 __maintainer__ = "Sig Janoska-Bedi"
 __email__ = "signe@atreeus.com"

@@ -279,10 +279,11 @@ class UniversalCompletion:
 
     def build_context(self, 
                       prompt: str, 
-                      context: List[Dict[str, str]], 
-                      max_context_length: int, 
+                      tag: str = "",
+                      context: List[Dict[str, str]] = "", 
+                      max_context_length: int = None, 
                       model_type: Optional[str] = None, 
-                      context_keywords_only: bool = True, 
+                      context_keywords_only: bool = None, 
                       additional_context: str = "", 
                       ) -> Union[str, List[Dict[str, str]]]:
         """
@@ -302,4 +303,18 @@ class UniversalCompletion:
             Union[str, List[Dict[str, str]]]: If `model_type` is 'v1/chat/completions', returns a list of dicts with 
                                               'role' and 'content' keys. If not, returns a string.
         """
-        pass
+
+        model_type = model_type if model_type is not None else self.validate_model_type(self.model)
+        max_context_length = max_context_length if max_context_length is not None else self.max_context_length
+        context_keywords_only = context_keywords_only if context_keywords_only is not None else self.context_keywords_only
+
+        return context.get_context()
+
+        # def get_context(tag: str = "", 
+        #                 max_context_length: int, 
+        #                 output_file: str, 
+        #                 model_name:str, 
+        #                 context_keywords_only: bool = True, 
+        #                 additional_context: str = "",
+        #                 model_type: str = None, 
+        #                 question: str = None)

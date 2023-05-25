@@ -19,7 +19,7 @@ import pandas as pd
 import json
 import asyncio
 import click
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Dict, Optional, Union
 
 class UniversalCompletion:
     def __init__(   self, 
@@ -68,7 +68,7 @@ class UniversalCompletion:
         self.context_keywords_only = context_keywords_only
         self.preserve_new_lines = preserve_new_lines
         
-    def connect(self, api_key=None, org_id=org_id) -> None:
+    def connect(self, api_key=None, org_id=None) -> None:
         """
         Connects to the OpenAI API using the provided organization ID and API key.
 
@@ -277,5 +277,29 @@ class UniversalCompletion:
         return None
 
 
-    def build_context(self, prompt:str, context):
+    def build_context(self, 
+                      prompt: str, 
+                      context: List[Dict[str, str]], 
+                      max_context_length: int, 
+                      model_type: Optional[str] = None, 
+                      context_keywords_only: bool = True, 
+                      additional_context: str = "", 
+                      ) -> Union[str, List[Dict[str, str]]]:
+        """
+        Builds a full query context for a given prompt and context.
+
+        Parameters:
+            prompt (str): The main prompt to build the context around.
+            context (List[Dict[str, str]]): List of past prompts and responses.
+            max_context_length (int): Maximum length of the context to return.
+            model_type (Optional[str]): Type of the language model. If 'v1/chat/completions', return a list of dicts 
+                                        with 'role' and 'content' keys. If not, return a string. Default is None.
+            context_keywords_only (bool, optional): If True, use only the most common phrases and words from the context 
+                                                    and additional context. Default is True.
+            additional_context (str, optional): Additional context to add to the context. Default is an empty string.
+
+        Returns:
+            Union[str, List[Dict[str, str]]]: If `model_type` is 'v1/chat/completions', returns a list of dicts with 
+                                              'role' and 'content' keys. If not, returns a string.
+        """
         pass

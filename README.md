@@ -208,3 +208,41 @@ xargs -d '\n' -I {} gptty query --question "{}" < questions.txt
 ```
 
 ![question chain example](assets/question_chain_example.png)
+
+
+## UniversalCompletion
+
+The UniversalCompletion class provides a unified interface for interacting with OpenAI's language models, (mostly) abstracting away the specifics of whether the application is using the Completion or ChatCompletion mode. The main idea is to facilitate the creation, configuration, and management of the language models.
+
+This is intended to be a useful abstraction for both Completions and ChatCompletions. Here is some example usage.
+
+```python
+>>> from gptty import UniversalCompletion
+>>> g = UniversalCompletion(api_key="sk-sdsDFABRSrpHefQ34kLaT3Blbf9JUb3Y3N39f9d5o9H3235x", org_id="org-5S6sk8CSlZmQF9D37429Svhc")
+>>> g.connect()
+>>> g.set_model('gpt-3.5-turbo')
+>>> g.validate_model_type(g.model)
+'v1/chat/completions'
+>>> g.fetch_response(prompt=[{"role": "user", "content": "What is an abstraction?"}])
+<OpenAIObject chat.completion id=chatcmpl-7JxBPjmne2lsd9s2uqy3GasdlXQCZ at 0x7fc2ls949e21> JSON: {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "An abstraction is a simplified representation of a complex system or concept. It involves focusing on the most important aspects of the system or concept and ignoring the details that are not relevant to the current context. Abstractions are used in many fields, including computer science, mathematics, and philosophy, to help people understand complex ideas and systems. They can be represented in various forms, such as diagrams, models, or algorithms.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1684990000,
+  "id": "chatcmpl-7JxBPjmne2lsd9s2uqy3GasdlXQCZ",
+  "model": "gpt-3.5-turbo-0301",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 82,
+    "prompt_tokens": 13,
+    "total_tokens": 95
+  }
+}
+```

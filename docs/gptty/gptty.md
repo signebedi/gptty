@@ -5,7 +5,7 @@ Functions
 ---------
 
     
-`create_chat_room(configs={'api_key': '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', 'org_id': 'org-5S6J4UCSlZmQFBoi7415svhC', 'your_name': 'question', 'gpt_name': 'response', 'output_file': 'output.txt', 'model': 'gpt-4-0314', 'temperature': 0.0, 'max_tokens': 1500, 'max_context_length': 1000, 'context_keywords_only': True, 'preserve_new_lines': True, 'verify_internet_endpoint': 'google.com'}, log_responses: bool = True, config_path=None, verbose: bool = False)`
+`create_chat_room(configs={'api_key': '', 'org_id': '', 'your_name': 'question', 'gpt_name': 'response', 'output_file': 'output.txt', 'model': 'gpt-4-0314', 'temperature': 0.0, 'max_tokens': 1500, 'max_context_length': 1000, 'context_keywords_only': True, 'preserve_new_lines': True, 'verify_internet_endpoint': 'google.com'}, log_responses: bool = True, config_path=None, verbose: bool = False)`
 :   This function creates a chat room using the OpenAI API to generate responses to user inputs. 
     The user input is prompted and the response is displayed on the console. 
     The chat session is continuously open until the user enters ':quit' or ':q' to terminate the session. 
@@ -53,7 +53,7 @@ Functions
     - bool: True if the model name is available, False otherwise.
 
     
-`run_query(questions: list, tag: str, configs={'api_key': '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', 'org_id': 'org-5S6J4UCSlZmQFBoi7415svhC', 'your_name': 'question', 'gpt_name': 'response', 'output_file': 'output.txt', 'model': 'gpt-4-0314', 'temperature': 0.0, 'max_tokens': 1500, 'max_context_length': 1000, 'context_keywords_only': True, 'preserve_new_lines': True, 'verify_internet_endpoint': 'google.com'}, additional_context: str = '', log_responses: bool = True, config_path=None, verbose: bool = False, return_json: bool = False, quiet: bool = False)`
+`run_query(questions: list, tag: str, configs={'api_key': '', 'org_id': '', 'your_name': 'question', 'gpt_name': 'response', 'output_file': 'output.txt', 'model': 'gpt-4-0314', 'temperature': 0.0, 'max_tokens': 1500, 'max_context_length': 1000, 'context_keywords_only': True, 'preserve_new_lines': True, 'verify_internet_endpoint': 'google.com'}, additional_context: str = '', log_responses: bool = True, config_path=None, verbose: bool = False, return_json: bool = False, quiet: bool = False)`
 :   This function is used to run a query command using OpenAI. 
     It takes in a list of questions, a tag, additional context, and various configuration options. 
     It authenticates with OpenAI using the API key specified in the configuration file, and then continuously sends and receives messages until all the questions 

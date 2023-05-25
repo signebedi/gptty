@@ -82,8 +82,8 @@ class UniversalCompletion:
         api_key = api_key if api_key is not None else self.api_key
         org_id = org_id if org_id is not None else self.org_id
 
-        openai.organization = self.org_id.rstrip('\n')
-        openai.api_key = self.api_key.rstrip('\n')
+        openai.organization = org_id.rstrip('\n')
+        openai.api_key = api_key.rstrip('\n')
 
 
     def usage_stats_today(self) -> Optional[Tuple[int, int, int]]:

@@ -104,7 +104,7 @@ To use a command, simply type it into the command prompt and press Enter. For ex
 ```
 > :configs
 
-api_key: SOME_CONFIG_HERE
+api_key: SOME_KEY_HERE
 org_id: org-SOME_CHARS_HERE
 your_name: question
 gpt_name: response
@@ -212,13 +212,11 @@ xargs -d '\n' -I {} gptty query --question "{}" < questions.txt
 
 ## UniversalCompletion
 
-The UniversalCompletion class provides a unified interface for interacting with OpenAI's language models, (mostly) abstracting away the specifics of whether the application is using the Completion or ChatCompletion mode. The main idea is to facilitate the creation, configuration, and management of the language models.
-
-This is intended to be a useful abstraction for both Completions and ChatCompletions. Here is some example usage.
+The UniversalCompletion class provides a unified interface for interacting with OpenAI's language models, (mostly) abstracting away the specifics of whether the application is using the Completion or ChatCompletion mode. The main idea is to facilitate the creation, configuration, and management of the language models. Here is some example usage.
 
 ```python
 >>> from gptty import UniversalCompletion
->>> g = UniversalCompletion(api_key="sk-sdsDFABRSrpHefQ34kLaT3Blbf9JUb3Y3N39f9d5o9H3235x", org_id="org-5S6sk8CSlZmQF9D37429Svhc")
+>>> g = UniversalCompletion(api_key="sk-SOME_CHARS_HERE", org_id="org-SOME_CHARS_HERE")
 >>> g.connect()
 >>> g.set_model('gpt-3.5-turbo')
 >>> g.validate_model_type(g.model)

@@ -215,32 +215,29 @@ xargs -d '\n' -I {} gptty query --question "{}" < questions.txt
 The UniversalCompletion class provides a unified interface for interacting with OpenAI's language models, (mostly) abstracting away the specifics of whether the application is using the Completion or ChatCompletion mode. The main idea is to facilitate the creation, configuration, and management of the language models. Here is some example usage.
 
 ```python
->>> from gptty import UniversalCompletion
->>> g = UniversalCompletion(api_key="sk-SOME_CHARS_HERE", org_id="org-SOME_CHARS_HERE")
->>> g.connect()
->>> g.set_model('gpt-3.5-turbo')
->>> g.validate_model_type(g.model)
-'v1/chat/completions'
->>> g.fetch_response(prompt=[{"role": "user", "content": "What is an abstraction?"}])
-<OpenAIObject chat.completion id=chatcmpl-7JxBPjmne2lsd9s2uqy3GasdlXQCZ at 0x7fc2ls949e21> JSON: {
-  "choices": [
-    {
-      "finish_reason": "stop",
-      "index": 0,
-      "message": {
-        "content": "An abstraction is a simplified representation of a complex system or concept. It involves focusing on the most important aspects of the system or concept and ignoring the details that are not relevant to the current context. Abstractions are used in many fields, including computer science, mathematics, and philosophy, to help people understand complex ideas and systems. They can be represented in various forms, such as diagrams, models, or algorithms.",
-        "role": "assistant"
-      }
-    }
-  ],
-  "created": 1684990000,
-  "id": "chatcmpl-7JxBPjmne2lsd9s2uqy3GasdlXQCZ",
-  "model": "gpt-3.5-turbo-0301",
-  "object": "chat.completion",
-  "usage": {
-    "completion_tokens": 82,
-    "prompt_tokens": 13,
-    "total_tokens": 95
-  }
-}
+# First, import the UniversalCompletion class from the gptty library.
+from gptty import UniversalCompletion
+
+# Now, we instantiate a new UniversalCompletion object. 
+# The 'api_key' parameter is your OpenAI API key, which you get when you sign up for the API.
+# The 'org_id' parameter is your OpenAI organization ID, which is also provided when you sign up.
+g = UniversalCompletion(api_key="sk-SOME_CHARS_HERE", org_id="org-SOME_CHARS_HERE")
+
+# This connects to the OpenAI API using the provided API key and organization ID.
+g.connect()
+
+# Now we specify which language model we want to use.
+# Here, 'gpt-3.5-turbo' is specified, which is a version of the GPT-3 model.
+g.set_model('gpt-3.5-turbo')
+
+# This method is used to verify the model type.
+# It returns a string that represents the endpoint for the current model in use.
+g.validate_model_type(g.model)  # Returns: 'v1/chat/completions'
+
+# We send a request to the language model here.
+# The prompt is a question, given in a format that the model understands.
+# The model responds with a completion - an extension of the prompt based on what it has learned during training.
+# The returned object is a representation of the response from the model.
+g.fetch_response(prompt=[{"role": "user", "content": "What is an abstraction?"}])
+# Returns a JSON response with the assistant's message.
 ```

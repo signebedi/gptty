@@ -4,6 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/gptty.svg)](https://pypi.python.org/pypi/gptty)
 [![Downloads](https://static.pepy.tech/badge/gptty)](https://pepy.tech/project/gptty)
 [![gptty tests](https://github.com/signebedi/gptty/workflows/tests/badge.svg)](https://github.com/signebedi/gptty/actions)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee--brightgreen.svg?logo=buy-me-a-coffee&logoColor=brightgreen)](https://www.buymeacoffee.com/signebedi)
 
 ChatGPT wrapper in your TTY
 

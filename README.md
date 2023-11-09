@@ -8,6 +8,11 @@
 
 ChatGPT wrapper in your TTY
 
+<div style="background-color: #4CAF50; padding: 10px; color: white; text-align: center;">
+  This version supports gpt4 and <a href="https://help.openai.com/en/articles/8555510-gpt-4-turbo" style="color: white; text-decoration: underline;">gpt4-turbo</a>!
+</div>
+
+
 ## About
 
 gptty is a ChatGPT shell interface that allows you to (1) interact with ChatGPT in a manner similar to the web application, but without needing to rely on the web application's stability; (2) preserve context across chat sessions and structure your conversations however you want; (3) save local copies of your conversations for easy reference.

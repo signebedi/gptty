@@ -180,7 +180,7 @@ async def query_async_wrapper(config_path:str, question:str, tag:str, additional
       click.echo(f"{RED}FAILED to initialize connection to OpenAI. Have you added an API token? See gptty docs <https://github.com/signebedi/gptty#configuration> or <https://platform.openai.com/account/api-keys> for more information.")
       return
 
-  if len(questions) < 1 or not isinstance(questions, tuple):
+  if len(question) < 1 or not isinstance(question, tuple):
       click.echo(f"{RED}FAILED to query ChatGPT. Did you forget to ask a question? Run `gptty chat --help` for more information.")
       return
 

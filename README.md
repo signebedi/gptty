@@ -8,9 +8,8 @@
 
 ChatGPT wrapper in your TTY
 
-<div style="background-color: #4CAF50; padding: 10px; color: white; text-align: center;">
-  This version supports gpt4 and <a href="https://help.openai.com/en/articles/8555510-gpt-4-turbo" style="color: white; text-decoration: underline;">gpt4-turbo</a>!
-</div>
+> [!NOTE]  
+> This version supports gpt4 and [gpt4-turbo](https://help.openai.com/en/articles/8555510-gpt-4-turbo)!
 
 
 ## About
